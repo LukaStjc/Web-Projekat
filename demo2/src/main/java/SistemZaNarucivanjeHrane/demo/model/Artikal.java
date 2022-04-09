@@ -3,6 +3,7 @@ package SistemZaNarucivanjeHrane.demo.model;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
 public class Artikal implements Serializable {
@@ -15,6 +16,9 @@ public class Artikal implements Serializable {
     private TipArtikla tip;
     private double kolicina;
     private String opis;
+
+    @ManyToOne
+    private Restoran restoran;
 
     public Artikal() {
     }

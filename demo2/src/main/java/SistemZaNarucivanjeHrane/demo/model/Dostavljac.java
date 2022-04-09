@@ -8,7 +8,7 @@ import java.util.Set;
 @Entity
 public class Dostavljac extends Korisnik implements Serializable {
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "Dostavljac", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Porudzbina> porudzbine = new HashSet<>();
 
     public Dostavljac() {

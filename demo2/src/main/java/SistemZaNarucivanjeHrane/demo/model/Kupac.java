@@ -10,11 +10,13 @@ import java.util.Set;
 
 @Entity
 public class Kupac extends Korisnik implements Serializable {
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "Kupac", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Porudzbina> porudzbine = new HashSet<>();
 
     private int brojBodova;
     //TODO kako se radi ovaj tip kupca; da li je klasa ili enum koji ne bih znao uraditi
+
+    // tip je struct sa enum poljem i int
 
     public Kupac() {
         super();

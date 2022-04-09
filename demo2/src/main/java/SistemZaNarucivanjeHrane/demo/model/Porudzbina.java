@@ -21,9 +21,11 @@ public class Porudzbina implements Serializable {
     private StatusPorudzbine statusPorudzbine;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "korisnickoIme")
     private Dostavljac dostavljac;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "korisnickoIme")
     private Kupac kupac;
 
     public Porudzbina() {

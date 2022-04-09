@@ -8,6 +8,7 @@ public abstract class Korisnik {
 
     @Id
     private String korisnickoIme;
+
     private String lozinka;
 
     @Column

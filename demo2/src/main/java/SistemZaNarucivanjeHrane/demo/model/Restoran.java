@@ -15,7 +15,7 @@ public class Restoran implements Serializable {
     private String naziv;
     private String tip;
 
-    //@OneToOne
+    @OneToMany
     private ArrayList<Artikal> jelovnik;
 
     private Lokacija lokacija;
