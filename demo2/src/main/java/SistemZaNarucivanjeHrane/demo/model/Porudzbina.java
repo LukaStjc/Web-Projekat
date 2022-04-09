@@ -11,11 +11,14 @@ public class Porudzbina implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    private Long id;
+    private Long id;    //TODO mislim da je UUID @ID i da ne treba ovo polje da ima
     private int UUID;
     private ArrayList<Artikal> poruceniArtikli;
     private Restoran restoran;
     private Date datum;
+    private double cena;
+    private String korisnickoIme; // TODO ne znam da li je dobro ovako
+    private StatusPorudzbine statusPorudzbine;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Dostavljac dostavljac;

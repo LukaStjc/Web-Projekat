@@ -13,7 +13,7 @@ public class Artikal implements Serializable {
     private Long id;
     private String naziv;
     private TipArtikla tip;
-    private Long kolicina;
+    private double kolicina;
     private String opis;
 
     public Artikal() {
@@ -26,23 +26,43 @@ public class Artikal implements Serializable {
         this.opis = opis;
     }
 
-    public Long getId() { return id; }
+    public Long getId() {
+        return id;
+    }
 
-    public void setId(Long id) { this.id = id; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getNaziv() { return naziv; }
+    public String getNaziv() {
+        return naziv;
+    }
 
-    public void setNaziv(String naziv) { this.naziv = naziv; }
+    public void setNaziv(String naziv) {
+        this.naziv = naziv;
+    }
 
-    public TipArtikla getTip() { return tip; }
+    public TipArtikla getTip() {
+        return tip;
+    }
 
-    public void setTip(TipArtikla tip) { this.tip = tip; }
+    public void setTip(TipArtikla tip) {
+        this.tip = tip;
+    }
 
-    public Long getKolicina() { return kolicina; }
+    public double getKolicina() {
+        return kolicina;
+    }
 
-    public void setKolicina(Long kolicina) { this.kolicina = kolicina; }
+    public void setKolicina(Long kolicina) {
+        this.kolicina = kolicina;
+    }
 
-    public String getOpis() { return opis; }
+    public String getOpis() {
+        return opis;
+    }
 
-    public void setOpis(String opis) { this.opis = opis; }
+    public void setOpis(String opis) {
+        this.opis = opis;
+    }
 }

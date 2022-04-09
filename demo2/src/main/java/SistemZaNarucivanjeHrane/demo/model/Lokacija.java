@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Lokacija {
     private String geografskaDuzina;
-    private String getGeografskaSirina;
+    private String geografskaSirina;
     private String adresa;
 
     public Lokacija() {
@@ -18,7 +18,7 @@ public class Lokacija {
         this.geografskaDuzina = geografskaDuzina;
     }
 
-    public void setGetGeografskaSirina(String getGeografskaSirina) {
-        this.getGeografskaSirina = getGeografskaSirina;
+    public void setGeografskaSirina(String geografskaSirina) {
+        this.geografskaSirina = geografskaSirina;
     }
 }

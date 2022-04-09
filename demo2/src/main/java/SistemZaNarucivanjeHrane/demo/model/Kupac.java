@@ -14,7 +14,7 @@ public class Kupac extends Korisnik implements Serializable {
     private Set<Porudzbina> porudzbine = new HashSet<>();
 
     private int brojBodova;
-    //TODO kako se radi ovaj tip kupca, da li je klasa ili enum koji ne bih znao uraditi
+    //TODO kako se radi ovaj tip kupca; da li je klasa ili enum koji ne bih znao uraditi
 
     public Kupac() {
         super();

@@ -11,35 +11,63 @@ public class Restoran implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String naziv;
     private String tip;
+
+    //@OneToOne
     private ArrayList<Artikal> jelovnik;
-    //private Lokacija lokacija;
+
+    private Lokacija lokacija;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Menadzer menadzer;
 
     //TODO mapiraj povezanost izmedju artikla i restorana
 
-    //TODO konstruktor kad zavrsis sa svim poljima
-
+    // mislim da ne treba|^
 
     public Restoran() {
+        jelovnik = new ArrayList<>();
     }
 
-    public Long getId() { return id; }
+    public Restoran(String naziv, String tip, Lokacija lokacija, Menadzer menadzer) {
+        this.naziv = naziv;
+        this.tip = tip;
+        this.lokacija = lokacija;
+        this.menadzer = menadzer;
+        jelovnik = new ArrayList<>();
+    }
 
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getNaziv() { return naziv; }
+    /*public void setId(Long id) {
+        this.id = id;
+    }*/
 
-    public void setNaziv(String naziv) { this.naziv = naziv; }
+    public String getNaziv() {
+        return naziv;
+    }
 
-    public String getTip() { return tip; }
+    public void setNaziv(String naziv) {
+        this.naziv = naziv;
+    }
 
-    public void setTip(String tip) { this.tip = tip; }
+    public String getTip() {
+        return tip;
+    }
 
-    public ArrayList<Artikal> getJelovnik() { return jelovnik; }
+    public void setTip(String tip) {
+        this.tip = tip;
+    }
 
-    public void setJelovnik(ArrayList<Artikal> jelovnik) { this.jelovnik = jelovnik; }
+    public ArrayList<Artikal> getJelovnik() {
+        return jelovnik;
+    }
+
+    public boolean dodajArtikal(Artikal artikal){
+        return jelovnik.add(artikal);
+    }
 }
