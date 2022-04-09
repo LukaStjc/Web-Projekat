@@ -1,34 +1,21 @@
 package SistemZaNarucivanjeHrane.demo.model;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
 
 public class Artikal implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-
-    private Long id;
     private String naziv;
+
     private TipArtikla tip;
-    private Long kolicina;
+
+    private Long kolicina; //grami ili mililitri????
+
     private String opis;
 
     public Artikal() {
     }
-
-    public Artikal(String naziv, TipArtikla tip, Long kolicina, String opis) {
-        this.naziv = naziv;
-        this.tip = tip;
-        this.kolicina = kolicina;
-        this.opis = opis;
-    }
-
-    public Long getId() { return id; }
-
-    public void setId(Long id) { this.id = id; }
 
     public String getNaziv() { return naziv; }
 
