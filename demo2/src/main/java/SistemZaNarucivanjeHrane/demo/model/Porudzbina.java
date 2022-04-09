@@ -1,12 +1,11 @@
 package SistemZaNarucivanjeHrane.demo.model;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
+@Entity
 public class Porudzbina implements Serializable {
 
     @Id
@@ -17,4 +16,13 @@ public class Porudzbina implements Serializable {
     private ArrayList<Artikal> poruceniArtikli;
     private Restoran restoran;
     private Date datum;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Dostavljac dostavljac;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Kupac kupac;
+
+    public Porudzbina() {
+    }
 }

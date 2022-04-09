@@ -2,10 +2,7 @@ package SistemZaNarucivanjeHrane.demo.model;
 
 import com.sun.xml.bind.v2.TODO;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -18,6 +15,9 @@ public class Restoran implements Serializable {
     private String tip;
     private ArrayList<Artikal> jelovnik;
     //private Lokacija lokacija;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Menadzer menadzer;
 
     //TODO mapiraj povezanost izmedju artikla i restorana
 
