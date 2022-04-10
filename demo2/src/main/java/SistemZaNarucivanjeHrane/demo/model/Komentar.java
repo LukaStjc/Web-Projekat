@@ -10,12 +10,12 @@ public class Komentar implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //@ManyToOne
-    //@
-    //private Kupac kupac;
+    @ManyToOne
+    @JoinColumn(name = "korisnickoImeKupca")
+    private Kupac kupac;
 
     @ManyToOne
-    @JoinColumn(name = "naziv restorana") //komentar ima kolonu sa nazivima restorana
+    @JoinColumn(name = "nazivRestorana")
     private Restoran restoran;
 
     private String tekst;
@@ -40,5 +40,9 @@ public class Komentar implements Serializable {
     public int getOcena() { return ocena; }
 
     //ne sme biti nesto drugo sem 1 i 5
-    public void setOcena(int ocena) { this.ocena = ocena; }
+    public void setOcena(int ocena) {  if(ocena > 0 && ocena < 6) {this.ocena = ocena;} else this.ocena = 0;}
+
+    public Kupac getKupac() { return kupac; }
+
+    public void setKupac(Kupac kupac) { this.kupac = kupac; }
 }

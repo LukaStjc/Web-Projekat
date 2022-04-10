@@ -15,11 +15,8 @@ public class Restoran implements Serializable {
     @OneToMany(mappedBy = "jelovnik", cascade = CascadeType.ALL) //kaskadiranje???
     private Set<Artikal> jelovnik = new HashSet<>();
 
-    //jedna lokacija na jedan restoran
-    //@OneToOne
-    //private Lokacija lokacija;
-
-    //TODO konstruktor kad zavrsis sa svim poljima
+    @OneToOne
+    private Lokacija lokacija;
 
     public Restoran() {
     }
@@ -35,4 +32,9 @@ public class Restoran implements Serializable {
     public Set<Artikal> getJelovnik() { return jelovnik; }
 
     public void setJelovnik(Set<Artikal> jelovnik) { this.jelovnik = jelovnik; }
+
+    public Lokacija getLokacija() { return lokacija; }
+
+    public void setLokacija(Lokacija lokacija) { this.lokacija = lokacija; }
+
 }
