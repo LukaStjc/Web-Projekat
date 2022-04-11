@@ -8,18 +8,34 @@ import java.util.Set;
 @Entity
 public class Restoran implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long ID;
+
+    @Column(nullable = false)
     private String naziv;
 
     private String tip;
 
-    @OneToMany(mappedBy = "jelovnik", cascade = CascadeType.ALL) //kaskadiranje???
+    @OneToMany(cascade = CascadeType.ALL) //undirektna
+    @JoinColumn(name = "artikal_id")
     private Set<Artikal> jelovnik = new HashSet<>();
 
-    @OneToOne
+    @OneToOne //undirektna
     private Lokacija lokacija;
 
     public Restoran() {
     }
+
+    public Restoran(String naziv, String tip, Set<Artikal> jelovnik, Lokacija lokacija) {
+        this.naziv = naziv;
+        this.tip = tip;
+        this.jelovnik = jelovnik;
+        this.lokacija = lokacija;
+    }
+
+    public Long getID() { return ID; }
+
+    public void setID(Long ID) { this.ID = ID; }
 
     public String getNaziv() { return naziv; }
 

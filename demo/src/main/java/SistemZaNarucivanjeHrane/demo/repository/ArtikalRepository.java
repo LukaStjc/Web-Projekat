@@ -5,5 +5,5 @@ import jdk.nashorn.internal.ir.annotations.Reference;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 @Reference
-public interface ArtikalRepository extends JpaRepository<Artikal, String> {
+public interface ArtikalRepository extends JpaRepository<Artikal, Long> {
 }

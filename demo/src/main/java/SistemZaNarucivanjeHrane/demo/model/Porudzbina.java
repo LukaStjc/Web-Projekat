@@ -1,23 +1,32 @@
 package SistemZaNarucivanjeHrane.demo.model;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
+@Table(name = "porudzbina_tabela") //ovo sam videla da je ona iskucala na svom projektu, ne znam jel treba za sve
 public class Porudzbina implements Serializable {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer UUID;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    private UUID ID; //sve ovo sam prepisala sa njenog projekta sto je pokazivala na vezbama
 
-    @OneToMany(mappedBy = "poruceni_artikli", cascade = CascadeType.ALL)
+    @ManyToMany //undirektno
+    @JoinTable(name = "poruceno",
+            joinColumns = { @JoinColumn(name = "porudzbina_id", referencedColumnName = "id") },
+            inverseJoinColumns = { @JoinColumn(name = "artikal_id", referencedColumnName = "id") }
+    )
     private Set<Artikal> poruceniArtikli = new HashSet<>();
 
-    @ManyToOne
-    @JoinColumn(name = "naziv_restorana")
+    @ManyToOne //undirektna
+    @JoinColumn(name = "restoran_id")
     private Restoran restoran;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -25,21 +34,29 @@ public class Porudzbina implements Serializable {
 
     private Long cena;
 
-    @ManyToOne
-    @JoinColumn(name = "korisnickoImeKupca")
+    @ManyToOne //bidirektna
+    //@JoinColumn(name = "kupac_id") mislim da ovde ne treba ovo i  da ide samo mapped by "kupac" kod OneToMany u kupcu
     private Kupac kupac;
 
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    //TODO geteri seteri
-
     public Porudzbina() {
     }
 
-    public Integer getUUID() { return UUID; }
+    public Porudzbina(UUID ID, Set<Artikal> poruceniArtikli, Restoran restoran, Date datumIVreme, Long cena, Kupac kupac, Status status) {
+        this.ID = ID;
+        this.poruceniArtikli = poruceniArtikli;
+        this.restoran = restoran;
+        this.datumIVreme = datumIVreme;
+        this.cena = cena;
+        this.kupac = kupac;
+        this.status = status;
+    }
 
-    public void setUUID(Integer UUID) { this.UUID = UUID; }
+    public UUID getID() { return ID; }
+
+    public void setID(UUID ID) { this.ID = ID; }
 
     public Set<Artikal> getPoruceniArtikli() { return poruceniArtikli; }
 
@@ -51,7 +68,6 @@ public class Porudzbina implements Serializable {
 
     public Date getDatumIVreme() { return datumIVreme; }
 
-    //da li treba set date and time, da li to uopste moze da se menja
     public void setDatumIVreme(Date datumIVreme) { this.datumIVreme = datumIVreme; }
 
     public Long getCena() { return cena; }

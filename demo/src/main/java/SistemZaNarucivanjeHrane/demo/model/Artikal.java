@@ -1,15 +1,21 @@
 package SistemZaNarucivanjeHrane.demo.model;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 public class Artikal implements Serializable {
 
-    //TODO svuda dodaj cascade i fetch type
+    //TODO cao luka, svuda dodaj cascade i fetch type gde mislis da treba
+    //slobodno dodaj i column gde mislis da treba, ja sam ti svuda navela koja je veza u pitanju, kontam to da ostavimo zakomentarisano i na odbrani da nam bude lakse
+    //kod kupca u tvojoj klasi sam ti ostavila porukicu
+    //i ostale porukice procitaj ali ja mislim da je to to, koliko sam ja nju shvatila na vezbama
+    // :)
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long ID;
+
+    @Column(nullable = false) //ne moze naziv da bude null
     private String naziv;
 
     private Long cena;
@@ -17,12 +23,24 @@ public class Artikal implements Serializable {
     @Enumerated(EnumType.STRING)
     private TipArtikla tip;
 
-    private Long kolicina; //TODO grami ili mililitri????
+    private Long kolicina;
 
     private String opis;
 
     public Artikal() {
     }
+
+    public Artikal(String naziv, Long cena, TipArtikla tip, Long kolicina, String opis) {
+        this.naziv = naziv;
+        this.cena = cena;
+        this.tip = tip;
+        this.kolicina = kolicina;
+        this.opis = opis;
+    }
+
+    public Long getID() { return ID; }
+
+    public void setID(Long ID) { this.ID = ID; }
 
     public String getNaziv() { return naziv; }
 

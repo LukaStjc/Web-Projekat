@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Entity
 public class Kupac extends Korisnik implements Serializable {
-    @OneToMany(mappedBy = "Kupac", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "kupac", fetch = FetchType.EAGER, cascade = CascadeType.ALL) //mislim da mora da pise kupac malim slovima da bude tacno onako kako je napisano u klasi porudzbina
     private Set<Porudzbina> porudzbine = new HashSet<>();
 
     private int brojBodova;

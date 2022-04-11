@@ -15,5 +15,4 @@ public class Dostavljac extends Korisnik implements Serializable {
         super();
     }
 
-
 }
