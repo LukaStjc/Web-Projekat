@@ -5,69 +5,50 @@ import com.sun.xml.bind.v2.TODO;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Restoran implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long ID;
 
+    @Column(nullable = false)
     private String naziv;
+
     private String tip;
 
-    @OneToMany
-    private ArrayList<Artikal> jelovnik;
+    @OneToMany(fetch = FetchType.LAZY)  //undirektna
+    @JoinColumn(name = "artikal_id")
+    private Set<Artikal> jelovnik = new HashSet<>();
 
+    @OneToOne   //undirektna
     private Lokacija lokacija;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Menadzer menadzer;
-
-    //TODO mapiraj povezanost izmedju artikla i restorana
-
-    // mislim da ne treba|^
-
     public Restoran() {
-        jelovnik = new ArrayList<>();
     }
 
-    public Restoran(String naziv, String tip, Lokacija lokacija, Menadzer menadzer) {
+    public Restoran(String naziv, String tip, Set<Artikal> jelovnik, Lokacija lokacija) {
         this.naziv = naziv;
         this.tip = tip;
+        this.jelovnik = jelovnik;
         this.lokacija = lokacija;
-        this.menadzer = menadzer;
-        jelovnik = new ArrayList<>();
     }
 
-    public Long getId() {
-        return id;
-    }
+    public Long getID() { return ID; }
 
-    /*public void setId(Long id) {
-        this.id = id;
-    }*/
+    public String getNaziv() { return naziv; }
 
-    public String getNaziv() {
-        return naziv;
-    }
+    public void setNaziv(String naziv) { this.naziv = naziv; }
 
-    public void setNaziv(String naziv) {
-        this.naziv = naziv;
-    }
+    public String getTip() { return tip; }
 
-    public String getTip() {
-        return tip;
-    }
+    public void setTip(String tip) { this.tip = tip; }
 
-    public void setTip(String tip) {
-        this.tip = tip;
-    }
+    public Set<Artikal> getJelovnik() { return jelovnik; }
 
-    public ArrayList<Artikal> getJelovnik() {
-        return jelovnik;
-    }
+    public Lokacija getLokacija() { return lokacija; }
 
-    public boolean dodajArtikal(Artikal artikal){
-        return jelovnik.add(artikal);
-    }
+    public void setLokacija(Lokacija lokacija) { this.lokacija = lokacija; }
 }

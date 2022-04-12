@@ -1,6 +1,6 @@
 package SistemZaNarucivanjeHrane.demo.model;
 
-public enum StatusPorudzbine {
+public enum Status {
     OBRADA,
     U_PRIPREMI,
     CEKA_DOSTAVLJACA,

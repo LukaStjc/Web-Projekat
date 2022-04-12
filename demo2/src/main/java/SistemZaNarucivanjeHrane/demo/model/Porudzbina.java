@@ -1,33 +1,74 @@
 package SistemZaNarucivanjeHrane.demo.model;
 
+import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 
 @Entity
 public class Porudzbina implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    private UUID ID; //ova anotacija sluzi tome da se generise veliki string brojeva, koji je naravno jedinstven
 
-    private Long id;    //TODO mislim da je UUID @ID i da ne treba ovo polje da ima
-    private int UUID;
-    private ArrayList<Artikal> poruceniArtikli;
+    @ManyToMany(fetch = FetchType.LAZY) //undirektno
+    @JoinTable(name = "poruceno",
+            joinColumns = { @JoinColumn(name = "porudzbina_id", referencedColumnName = "id") },
+            inverseJoinColumns = { @JoinColumn(name = "artikal_id", referencedColumnName = "id") }
+    )
+    private Set<Artikal> poruceniArtikli = new HashSet<>();
+
+    @ManyToOne(fetch = FetchType.LAZY) //undirektna
+    @JoinColumn(name = "restoran_id")
     private Restoran restoran;
-    private Date datum;
-    private double cena;
-    private String korisnickoIme; // TODO ne znam da li je dobro ovako
-    private StatusPorudzbine statusPorudzbine;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "korisnickoIme")
-    private Dostavljac dostavljac;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date datumIVreme;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "korisnickoIme")
+    private long cena;
+
+    @ManyToOne(fetch = FetchType.LAZY) //bidirektna, mappedBy ide u klasu Kupac
     private Kupac kupac;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     public Porudzbina() {
     }
+
+    public Porudzbina(UUID ID, Set<Artikal> poruceniArtikli, Restoran restoran, Date datumIVreme, long cena, Kupac kupac, Status status) {
+        this.ID = ID;
+        this.poruceniArtikli = poruceniArtikli;
+        this.restoran = restoran;
+        this.datumIVreme = datumIVreme;
+        this.cena = cena;
+        this.kupac = kupac;
+        this.status = status;
+    }
+
+    public UUID getID() { return ID; }
+
+    public Set<Artikal> getPoruceniArtikli() { return poruceniArtikli; }
+
+    public Restoran getRestoran() { return restoran; }
+
+    public void setRestoran(Restoran restoran) { this.restoran = restoran; }
+
+    public Date getDatumIVreme() { return datumIVreme; }
+
+    public void setDatumIVreme(Date datumIVreme) { this.datumIVreme = datumIVreme; }
+
+    public long getCena() { return cena; }
+
+    public void setCena(long cena) { this.cena = cena; }
+
+    public Status getStatus() { return status; }
+
+    public void setStatus(Status status) { this.status = status; }
+
+    public Kupac getKupac() { return kupac; }
+
+    public void setKupac(Kupac kupac) { this.kupac = kupac; }
 }

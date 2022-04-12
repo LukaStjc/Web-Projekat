@@ -1,72 +1,57 @@
 package SistemZaNarucivanjeHrane.demo.model;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.io.Serializable;
 
+@Entity
 public class Artikal implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long ID;
 
-    private Long id;
+    @Column(nullable = false) //ne moze naziv da bude null
     private String naziv;
-    private TipArtikla tip;
-    private double kolicina;
-    private String opis;
 
-    @ManyToOne
-    private Restoran restoran;
+    private long cena;
+
+    @Enumerated(EnumType.STRING)
+    private TipArtikla tip;
+
+    private double kolicina;
+
+    private String opis;
 
     public Artikal() {
     }
 
-    public Artikal(String naziv, TipArtikla tip, Long kolicina, String opis) {
+    public Artikal(String naziv, long cena, TipArtikla tip, double kolicina, String opis) {
         this.naziv = naziv;
+        this.cena = cena;
         this.tip = tip;
         this.kolicina = kolicina;
         this.opis = opis;
     }
 
-    public Long getId() {
-        return id;
-    }
+    public Long getID() { return ID; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getNaziv() { return naziv; }
 
-    public String getNaziv() {
-        return naziv;
-    }
+    public void setNaziv(String naziv) { this.naziv = naziv; }
 
-    public void setNaziv(String naziv) {
-        this.naziv = naziv;
-    }
+    public long getCena() { return cena; }
 
-    public TipArtikla getTip() {
-        return tip;
-    }
+    public void setCena(long cena) { this.cena = cena; }
 
-    public void setTip(TipArtikla tip) {
-        this.tip = tip;
-    }
+    public TipArtikla getTip() { return tip; }
 
-    public double getKolicina() {
-        return kolicina;
-    }
+    public void setTip(TipArtikla tip) { this.tip = tip; }
 
-    public void setKolicina(Long kolicina) {
-        this.kolicina = kolicina;
-    }
+    public double getKolicina() { return kolicina; }
 
-    public String getOpis() {
-        return opis;
-    }
+    public void setKolicina(Long kolicina) { this.kolicina = kolicina; }
 
-    public void setOpis(String opis) {
-        this.opis = opis;
-    }
+    public String getOpis() { return opis; }
+
+    public void setOpis(String opis) { this.opis = opis; }
 }

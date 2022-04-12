@@ -2,21 +2,31 @@ package SistemZaNarucivanjeHrane.demo.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 public class Menadzer extends Korisnik implements Serializable {
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private long zaduzenZaRestoran;
+
+    @OneToOne   // unidirektna
+    @JoinColumn(name = "restoran_id")
+    private Restoran restoran;
 
     Menadzer() {
         super();
+        super.setTipUloge(TipUloge.MENADZER);
     }
 
-    public void setZaduzenZaRestoran(long r) {
-        this.zaduzenZaRestoran = r;
+    public Menadzer(String korisnickoIme, String lozinka, String ime, String prezime, TipPola tipPola, Date datumRodjenja, Restoran restoran) {
+        super(korisnickoIme, lozinka, ime, prezime, tipPola, datumRodjenja);
+        super.setTipUloge(TipUloge.MENADZER);
+        this.restoran = restoran;
     }
 
-    public long getZaduzenZaRestoran() {
-        return zaduzenZaRestoran;
+    public void setRestoran(Restoran restoran) {
+        this.restoran = restoran;
+    }
+
+    public Restoran getRestoran() {
+        return restoran;
     }
 }

@@ -2,26 +2,40 @@ package SistemZaNarucivanjeHrane.demo.model;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
-import java.util.Date;
+import java.time.LocalDate;
 
 public abstract class Korisnik {
 
     @Id
+    @Column(unique = true, nullable = false)
     private String korisnickoIme;
 
     private String lozinka;
 
-    @Column
     private String ime;
 
-    @Column
     private String prezime;
 
     private TipPola tipPola;
-    private Date datumRodjenja;
+
+    private LocalDate datumRodjenja;
+
     private TipUloge tipUloge;
 
-    Korisnik(){}
+    public Korisnik() {
+    }
+
+    public Korisnik(String korisnickoIme, String lozinka, String ime, String prezime, TipPola tipPola, LocalDate datumRodjenja) {
+        this.lozinka = lozinka;
+        this.ime = ime;
+        this.prezime = prezime;
+        this.tipPola = tipPola;
+        this.datumRodjenja = datumRodjenja;
+
+        // sada treba proveriti da li vec postoji korisnik sa tim imenom
+        // mislim da to ide nesto sa SQL upitom
+        this.korisnickoIme=korisnickoIme;
+    }
 
     public String getKorisnickoIme() {
         return korisnickoIme;
@@ -30,7 +44,6 @@ public abstract class Korisnik {
     public void setKorisnickoIme(String korisnickoIme) {
         this.korisnickoIme = korisnickoIme;
     }
-    //TODO kada se kreira korisnicko ime, potrebno je proci kroz sve do sada kreirane korisnike i proveriti da li vec postoji neko sa tim imenom
 
     public void setLozinka(String lozinka) {
         this.lozinka = lozinka;
@@ -60,11 +73,11 @@ public abstract class Korisnik {
         this.tipPola = tipPola;
     }
 
-    public Date getDatumRodjenja() {
+    public LocalDate getDatumRodjenja() {
         return datumRodjenja;
     }
 
-    public void setDatumRodjenja(Date datumRodjenja) {
+    public void setDatumRodjenja(LocalDate datumRodjenja) {
         this.datumRodjenja = datumRodjenja;
     }
 
