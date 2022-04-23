@@ -4,4 +4,3 @@ public enum TipPola {
     MUSKI,
     ZENSKI
 }
-

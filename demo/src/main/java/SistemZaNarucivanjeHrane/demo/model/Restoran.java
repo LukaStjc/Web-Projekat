@@ -16,11 +16,11 @@ public class Restoran implements Serializable {
 
     private String tip;
 
-    @OneToMany(cascade = CascadeType.ALL) //undirektna
-    @JoinColumn(name = "artikal_id")
+    @OneToMany(fetch = FetchType.LAZY)  //undirektna
+    @JoinColumn(name = "restoran_id")
     private Set<Artikal> jelovnik = new HashSet<>();
 
-    @OneToOne //undirektna
+    @OneToOne   //undirektna
     private Lokacija lokacija;
 
     public Restoran() {
@@ -35,8 +35,6 @@ public class Restoran implements Serializable {
 
     public Long getID() { return ID; }
 
-    public void setID(Long ID) { this.ID = ID; }
-
     public String getNaziv() { return naziv; }
 
     public void setNaziv(String naziv) { this.naziv = naziv; }
@@ -47,10 +45,7 @@ public class Restoran implements Serializable {
 
     public Set<Artikal> getJelovnik() { return jelovnik; }
 
-    public void setJelovnik(Set<Artikal> jelovnik) { this.jelovnik = jelovnik; }
-
     public Lokacija getLokacija() { return lokacija; }
 
     public void setLokacija(Lokacija lokacija) { this.lokacija = lokacija; }
-
 }
