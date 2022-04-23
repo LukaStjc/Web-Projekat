@@ -1,12 +1,12 @@
 package SistemZaNarucivanjeHrane.demo.service;
 
-import SistemZaNarucivanjeHrane.demo.repository.ArtikalRepository;
+import SistemZaNarucivanjeHrane.demo.repository.LokacijaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ArtikalService {
+public class LokacijaService {
 
     @Autowired
-    private ArtikalRepository artikalRepository;
+    private LokacijaRepository lokacijaRepository;
 }
