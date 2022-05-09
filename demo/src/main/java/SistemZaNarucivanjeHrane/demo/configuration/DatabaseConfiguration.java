@@ -60,11 +60,11 @@ public class DatabaseConfiguration {
 
         TipKupca tipKupca = new TipKupca("zlatni", 0.3, 33); //Lupila sam koji su podaci za tip kupca, to treba smisliti lepo
 
-        Kupac kupacSara = new Kupac("sarasavic", "sarasara", "Sara" , "Savic", TipPola.ZENSKI, LocalDate.of(1999, 12 , 10), 11, tipKupca);
+        Kupac kupacSara = new Kupac("sarasavic", "sarasara", "Sara" , "Savic", TipPola.ZENSKI, LocalDate.of(1999, 12 , 10), 52, tipKupca);
         kupacRepository.save(kupacSara);
-        Kupac kupacJovan = new Kupac("jovanmaric", "jasamkralj", "Jovan" , "Maric", TipPola.ZENSKI, LocalDate.of(1989, 11 , 05), 35, tipKupca);
+        Kupac kupacJovan = new Kupac("jovanmaric", "jasamkralj", "Jovan" , "Maric", TipPola.ZENSKI, LocalDate.of(1989, 11 , 05), 28, tipKupca);
         kupacRepository.save(kupacJovan);
-        Kupac kupacAnja = new Kupac("anjamilosevic", "anjamanjam", "Anja" , "Milosevic", TipPola.ZENSKI, LocalDate.of(1978, 05 , 10), 28, tipKupca);
+        Kupac kupacAnja = new Kupac("anjamilosevic", "anjamanjam", "Anja" , "Milosevic", TipPola.ZENSKI, LocalDate.of(1978, 05 , 10), 24, tipKupca);
         kupacRepository.save(kupacAnja);
 
         Lokacija lokacijaSrpskaSicilija = new Lokacija("60" , "22", "Veselina Maslese 54A");
