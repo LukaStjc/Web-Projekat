@@ -9,9 +9,7 @@ import SistemZaNarucivanjeHrane.demo.service.KupacService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
@@ -59,5 +57,20 @@ public class KorisnikRestController {
         return ResponseEntity.ok("Korisnik uspesno ulogovan");
 
 
+    }
+
+    @GetMapping("/api/{korisnickoIme}")
+    public ResponseEntity<Korisnik> getUlogovaniKorisnik(@PathVariable(name = "korisnickoIme") String korisnickoIme, HttpSession session) {
+
+        Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
+        if(ulogovaniKorisnik == null)
+            return new ResponseEntity("Niste ulogovani", HttpStatus.BAD_REQUEST);
+
+        if(!korisnickoIme.equals(ulogovaniKorisnik.getKorisnickoIme()))
+            return new ResponseEntity("Mozete da pristupite samo svojim podacima", HttpStatus.BAD_REQUEST);
+
+        session.invalidate();
+        return ResponseEntity.ok(korisnikService.findByKorisnickoIme(ulogovaniKorisnik.getKorisnickoIme()));
+        
     }
 }
