@@ -1,6 +1,10 @@
 package SistemZaNarucivanjeHrane.demo.model;
 
-import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -9,7 +13,8 @@ import java.util.Set;
 @Entity
 public class Kupac extends Korisnik implements Serializable {
 
-    @OneToMany(mappedBy = "kupac", fetch = FetchType.LAZY)  // bidirektna
+    @OneToMany(mappedBy = "kupac", fetch = FetchType.LAZY)
+    @JsonIgnore// bidirektna
     private Set<Porudzbina> porudzbine = new HashSet<>();
 
     private int brojBodova;
@@ -47,5 +52,10 @@ public class Kupac extends Korisnik implements Serializable {
 
     public void setTipKupca(TipKupca tipKupca) {
         this.tipKupca = tipKupca;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
     }
 }

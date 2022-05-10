@@ -32,7 +32,7 @@ public class Porudzbina implements Serializable {
 
     private long cena;
 
-    @ManyToOne(fetch = FetchType.LAZY) //bidirektna, mappedBy ide u klasu Kupac
+    @ManyToOne(fetch = FetchType.LAZY) //bidirektna, mappedBy ide u klasu Kupac, imamo JsonIgnore
     private Kupac kupac;
 
     @Enumerated(EnumType.STRING)
@@ -74,4 +74,17 @@ public class Porudzbina implements Serializable {
     public Kupac getKupac() { return kupac; }
 
     public void setKupac(Kupac kupac) { this.kupac = kupac; }
+
+    @Override
+    public String toString() {
+        return "Porudzbina : " +
+                "ID = " + ID +
+                ", poruceniArtikli = " + poruceniArtikli +
+                ", restoran = " + restoran +
+                ", datumIVreme = " + datumIVreme +
+                ", cena = " + cena +
+                ", kupac = " + kupac +
+                ", status = " + status +
+                '\'';
+    }
 }
