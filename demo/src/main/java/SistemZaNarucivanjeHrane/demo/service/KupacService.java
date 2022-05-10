@@ -29,4 +29,8 @@ public class KupacService {
     public List<Kupac> findAll() {
         return kupacRepository.findAll();
     }
+
+    public Kupac findByKorisnickoIme(String korisnickoIme) {
+        return kupacRepository.findByKorisnickoIme(korisnickoIme);
+    }
 }

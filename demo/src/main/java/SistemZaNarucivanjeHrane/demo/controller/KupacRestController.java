@@ -1,19 +1,11 @@
 package SistemZaNarucivanjeHrane.demo.controller;
 
-import SistemZaNarucivanjeHrane.demo.dto.NoviKorisnikDto;
 import SistemZaNarucivanjeHrane.demo.model.Kupac;
-import SistemZaNarucivanjeHrane.demo.model.TipPola;
 import SistemZaNarucivanjeHrane.demo.service.KupacService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -22,7 +14,7 @@ public class KupacRestController {
     @Autowired
     private KupacService kupacService;
 
-    @PostMapping("/api/registracija")
+    /*@PostMapping("/api/registracija")
     public ResponseEntity<String> registracija(@RequestBody NoviKorisnikDto noviKorisnikDto) {
         if(noviKorisnikDto.getKorisnickoIme().isEmpty() || noviKorisnikDto.getIme().isEmpty() || noviKorisnikDto.getDatumRodjenja().isEmpty() || noviKorisnikDto.getLozinka().isEmpty() || noviKorisnikDto.getPrezime().isEmpty() || noviKorisnikDto.getTipPola()==null) {
             return new ResponseEntity("Uneli ste nevalidne podatke", HttpStatus.BAD_REQUEST);
@@ -39,7 +31,7 @@ public class KupacRestController {
             return new ResponseEntity("Uneli ste korisnicko ime koje vec postoji", HttpStatus.BAD_REQUEST);
         }
         else return ResponseEntity.ok("Uspesno ste se registrovali");
-    }
+    }*/
 
     //klasicno mapiranje samo da bismo proverili da li je registrovan korisnik umemorisan
     @GetMapping("/api/kupci")

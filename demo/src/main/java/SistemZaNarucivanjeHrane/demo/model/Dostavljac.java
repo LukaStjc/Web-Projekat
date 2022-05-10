@@ -29,4 +29,6 @@ public class Dostavljac extends Korisnik implements Serializable {
     public Set<Porudzbina> getPorudzbine() {
         return porudzbine;
     }
+
+
 }
