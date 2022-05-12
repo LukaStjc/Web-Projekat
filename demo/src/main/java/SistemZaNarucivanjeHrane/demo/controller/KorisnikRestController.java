@@ -59,6 +59,18 @@ public class KorisnikRestController {
 
     }
 
+    @PostMapping("api/logout")
+    public ResponseEntity logout(HttpSession session){
+        Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
+
+        if (ulogovaniKorisnik == null)
+            return new ResponseEntity("Niko nije ulogovan", HttpStatus.FORBIDDEN);
+
+        session.invalidate();
+        return new ResponseEntity("Uspesno ste se izlogovali", HttpStatus.OK);
+    }
+
+    //TODO videti za ovaj endpoint da li uopste staviti da mozes da vidis preko korisnickog imena ili da bude nesto samo /mojipodaci
     @GetMapping("/api/{korisnickoIme}")
     public ResponseEntity<Korisnik> getUlogovaniKorisnik(@PathVariable(name = "korisnickoIme") String korisnickoIme, HttpSession session) {
 
@@ -71,6 +83,6 @@ public class KorisnikRestController {
 
         session.invalidate();
         return ResponseEntity.ok(korisnikService.findByKorisnickoIme(ulogovaniKorisnik.getKorisnickoIme()));
-        
+
     }
 }
