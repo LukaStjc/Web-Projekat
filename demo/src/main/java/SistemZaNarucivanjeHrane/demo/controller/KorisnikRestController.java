@@ -1,6 +1,5 @@
 package SistemZaNarucivanjeHrane.demo.controller;
 
-import SistemZaNarucivanjeHrane.demo.dto.KorisnikDto;
 import SistemZaNarucivanjeHrane.demo.dto.LoginDto;
 import SistemZaNarucivanjeHrane.demo.dto.NoviKorisnikDto;
 import SistemZaNarucivanjeHrane.demo.model.Korisnik;
@@ -95,17 +94,15 @@ public class KorisnikRestController {
         LocalDate datum = LocalDate.parse(noviKorisnikDto.getDatumRodjenja(), formatter);
         TipPola pol = TipPola.valueOf(noviKorisnikDto.getTipPola());
 
-        KorisnikDto noviKorisnik = new KorisnikDto(noviKorisnikDto.getKorisnickoIme(), noviKorisnikDto.getLozinka(), noviKorisnikDto.getIme(), noviKorisnikDto.getPrezime(), pol, datum);
-
         if(ulogovaniKorisnik == null)
             return new ResponseEntity("Niste ulogovani", HttpStatus.BAD_REQUEST);
 
-        ulogovaniKorisnik.setKorisnickoIme(noviKorisnik.getKorisnickoIme());
-        ulogovaniKorisnik.setLozinka(noviKorisnik.getLozinka());
-        ulogovaniKorisnik.setIme(noviKorisnik.getIme());
-        ulogovaniKorisnik.setPrezime(noviKorisnik.getPrezime());
-        ulogovaniKorisnik.setTipPola(noviKorisnik.getTipPola());
-        ulogovaniKorisnik.setDatumRodjenja(noviKorisnik.getDatumRodjenja());
+        ulogovaniKorisnik.setKorisnickoIme(noviKorisnikDto.getKorisnickoIme());
+        ulogovaniKorisnik.setLozinka(noviKorisnikDto.getLozinka());
+        ulogovaniKorisnik.setIme(noviKorisnikDto.getIme());
+        ulogovaniKorisnik.setPrezime(noviKorisnikDto.getPrezime());
+        ulogovaniKorisnik.setTipPola(pol);
+        ulogovaniKorisnik.setDatumRodjenja(datum);
 
         session.setAttribute("Korisnik",ulogovaniKorisnik);
 
