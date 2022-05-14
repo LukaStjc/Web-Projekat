@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Entity
 public class Menadzer extends Korisnik implements Serializable {
 
-    @OneToOne   // unidirektna
+    @OneToOne//(fetch = FetchType.EAGER)   // unidirektna
     @JoinColumn(name = "restoran_id")
     private Restoran restoran;
 

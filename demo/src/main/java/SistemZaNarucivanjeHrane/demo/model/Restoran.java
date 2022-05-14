@@ -16,7 +16,7 @@ public class Restoran implements Serializable {
 
     private String tip;
 
-    @OneToMany(fetch = FetchType.LAZY)  //undirektna
+    @OneToMany(fetch = FetchType.EAGER)  //undirektna, bila neka greska u postmanu pa mora eager
     @JoinColumn(name = "restoran_id")
     private Set<Artikal> jelovnik = new HashSet<>();
 
