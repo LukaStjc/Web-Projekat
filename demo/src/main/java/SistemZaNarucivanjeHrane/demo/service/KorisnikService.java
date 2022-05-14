@@ -27,6 +27,10 @@ public class KorisnikService {
         return korisnikRepository.findByKorisnickoIme(korisnickoIme);
     }
 
+    public Korisnik save(Korisnik korisnik) {
+        return korisnikRepository.save(korisnik);
+    }
+
     public Korisnik login(String korisnickoIme, String lozinka) {
         
         Korisnik ulogovaniKorisnik = korisnikRepository.findByKorisnickoIme(korisnickoIme);

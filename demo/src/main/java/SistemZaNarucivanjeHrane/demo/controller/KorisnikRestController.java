@@ -109,6 +109,7 @@ public class KorisnikRestController {
 
         session.setAttribute("Korisnik",ulogovaniKorisnik);
 
+        korisnikService.save(ulogovaniKorisnik);
         return ResponseEntity.ok("Uspesno ste izmenili svoje podatke");
 
 
