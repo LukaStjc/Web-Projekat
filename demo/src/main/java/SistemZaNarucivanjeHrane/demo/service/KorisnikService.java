@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class KorisnikService {
@@ -25,6 +26,10 @@ public class KorisnikService {
 
     public Korisnik findByKorisnickoIme(String korisnickoIme){
         return korisnikRepository.findByKorisnickoIme(korisnickoIme);
+    }
+
+    public List<Korisnik> findAll() {
+        return korisnikRepository.findAll();
     }
 
     public Korisnik save(Korisnik korisnik) {

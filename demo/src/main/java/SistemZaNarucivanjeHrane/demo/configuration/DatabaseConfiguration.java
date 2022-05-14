@@ -16,6 +16,9 @@ import java.util.UUID;
 public class DatabaseConfiguration {
 
     @Autowired
+    private AdminRepository adminRepository;
+
+    @Autowired
     private ArtikalRepository artikalRepository;
 
     @Autowired
@@ -95,6 +98,8 @@ public class DatabaseConfiguration {
         Porudzbina porudzbina = new Porudzbina(UUID.randomUUID(), jelovnikSrpskaSicilija, restoranSrpskaSicilija, LocalDateTime.now(), 510, kupacJovan, Status.U_PRIPREMI);
         porudzbinaRepository.save(porudzbina);
 
+        Admin admin = new Admin("anicadjukic", "jasamasistent", "Anica", "Djokic", TipPola.ZENSKI, LocalDate.of(1999,05,11));
+        adminRepository.save(admin);
         return true;
     }
 }

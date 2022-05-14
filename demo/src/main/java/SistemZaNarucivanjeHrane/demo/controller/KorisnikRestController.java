@@ -109,7 +109,6 @@ public class KorisnikRestController {
         korisnikService.save(ulogovaniKorisnik);
         return ResponseEntity.ok("Uspesno ste izmenili svoje podatke");
 
-
-
     }
+
 }
