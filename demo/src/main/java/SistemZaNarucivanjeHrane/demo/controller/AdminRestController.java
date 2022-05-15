@@ -1,6 +1,6 @@
 package SistemZaNarucivanjeHrane.demo.controller;
 
-import SistemZaNarucivanjeHrane.demo.dto.NoviMenadzerDto;
+import SistemZaNarucivanjeHrane.demo.dto.MenadzerDostavljacDto;
 import SistemZaNarucivanjeHrane.demo.model.*;
 import SistemZaNarucivanjeHrane.demo.service.AdminService;
 import SistemZaNarucivanjeHrane.demo.service.KorisnikService;
@@ -40,29 +40,35 @@ public class AdminRestController {
         return ResponseEntity.ok(korisnici);
     }
 
-
-    @PostMapping("/api/kreirajmenadzera")
-    public ResponseEntity<String> kreirajMenadzera(@RequestBody NoviMenadzerDto noviMenadzerDto, HttpSession session) {
+    //TODO ne radi kada za ulogu stavimo DOSTAVLJAC ili dostavljac
+    @PostMapping("/api/adminkreira")
+    public ResponseEntity<String> adminKreira(@RequestBody MenadzerDostavljacDto menadzerDostavljacDto, HttpSession session) {
         Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
 
         if(ulogovaniKorisnik == null)
             return new ResponseEntity("Niste ulogovani.", HttpStatus.BAD_REQUEST);
         if(ulogovaniKorisnik.getTipUloge() != TipUloge.ADMIN)
             return new ResponseEntity("Ova funkcionalnost je dostupna samo administratorima", HttpStatus.BAD_REQUEST);
-        if(adminService.findRestoranByNaziv(noviMenadzerDto.getRestoran()) == null)
-            return new ResponseEntity("Uneli ste restoran koji ne postoji", HttpStatus.BAD_REQUEST);
-        if(korisnikService.findByKorisnickoIme(noviMenadzerDto.getKorisnickoIme()) != null)
+        if(korisnikService.findByKorisnickoIme(menadzerDostavljacDto.getKorisnickoIme()) != null)
             return new ResponseEntity("Korisnicko ime vec postoji", HttpStatus.BAD_REQUEST);
-        //da ne bi izbacivalo neki tekst greske u postmanu stavila sam ovo da lepo pise ako korisnicko ime vec postoji
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate datum = LocalDate.parse(noviMenadzerDto.getDatumRodjenja(), formatter);
-        TipPola pol = TipPola.valueOf(noviMenadzerDto.getTipPola());
-        Restoran restoran = adminService.findRestoranByNaziv(noviMenadzerDto.getRestoran());
+        LocalDate datum = LocalDate.parse(menadzerDostavljacDto.getDatumRodjenja(), formatter);
+        TipPola pol = TipPola.valueOf(menadzerDostavljacDto.getTipPola());
 
-        Menadzer menadzer = new Menadzer(noviMenadzerDto.getKorisnickoIme(), noviMenadzerDto.getLozinka(), noviMenadzerDto.getIme(), noviMenadzerDto.getPrezime(), pol, datum, restoran);
-        adminService.saveMenadzer(menadzer);
-        return ResponseEntity.ok("Uspesno ste kreirali menadzera");
+        if(menadzerDostavljacDto.getUloga().equals("Menadzer")){
+            Menadzer menadzer = new Menadzer(menadzerDostavljacDto.getKorisnickoIme(), menadzerDostavljacDto.getLozinka(), menadzerDostavljacDto.getIme(), menadzerDostavljacDto.getPrezime(), pol, datum, null);
+            adminService.saveMenadzer(menadzer);
+            return ResponseEntity.ok("Uspesno kreiran menadzer");
+        }
+
+        if(menadzerDostavljacDto.getUloga().equals("Dostavljac")){
+            Dostavljac dostavljac = new Dostavljac(menadzerDostavljacDto.getKorisnickoIme(), menadzerDostavljacDto.getLozinka(), menadzerDostavljacDto.getIme(), menadzerDostavljacDto.getPrezime(), pol, datum);
+            adminService.saveDostavljac(dostavljac);
+            return ResponseEntity.ok("Uspesno kreiran dostavljac");
+        }
+
+        return new ResponseEntity<>("Dozvoljeno je kreirati samo dostavljaca ili menadzera", HttpStatus.BAD_REQUEST);
 
 
     }

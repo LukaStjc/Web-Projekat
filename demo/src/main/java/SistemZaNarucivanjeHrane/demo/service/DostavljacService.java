@@ -14,4 +14,8 @@ public class DostavljacService {
     public Dostavljac findByKorisnickoIme(String korisnickoIme) {
         return dostavljacRepository.findByKorisnickoIme(korisnickoIme);
     }
+
+    public Dostavljac save(Dostavljac dostavljac) {
+        return  dostavljacRepository.save(dostavljac);
+    }
 }

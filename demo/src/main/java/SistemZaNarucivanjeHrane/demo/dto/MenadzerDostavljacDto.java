@@ -1,6 +1,6 @@
 package SistemZaNarucivanjeHrane.demo.dto;
 
-public class NoviMenadzerDto {
+public class MenadzerDostavljacDto {
 
     private String korisnickoIme;
 
@@ -14,16 +14,16 @@ public class NoviMenadzerDto {
 
     private String datumRodjenja;
 
-    private String restoran;
+    private String uloga;
 
-    public NoviMenadzerDto(String korisnickoIme, String lozinka, String ime, String prezime, String tipPola, String datumRodjenja, String restoran) {
+    public MenadzerDostavljacDto(String korisnickoIme, String lozinka, String ime, String prezime, String tipPola, String datumRodjenja, String uloga) {
         this.korisnickoIme = korisnickoIme;
         this.lozinka = lozinka;
         this.ime = ime;
         this.prezime = prezime;
         this.tipPola = tipPola;
         this.datumRodjenja = datumRodjenja;
-        this.restoran = restoran;
+        this.uloga = uloga;
     }
 
     public String getKorisnickoIme() {
@@ -74,11 +74,11 @@ public class NoviMenadzerDto {
         this.datumRodjenja = datumRodjenja;
     }
 
-    public String getRestoran() {
-        return restoran;
+    public String getUloga() {
+        return uloga;
     }
 
-    public void setRestoran(String restoran) {
-        this.restoran = restoran;
+    public void setUloga(String uloga) {
+        this.uloga = uloga;
     }
 }
