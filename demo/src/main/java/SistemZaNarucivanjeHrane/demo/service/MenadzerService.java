@@ -14,4 +14,8 @@ public class MenadzerService {
     public Menadzer findByKorisnickoIme(String korisnickoIme) {
         return menadzerRepository.findByKorisnickoIme(korisnickoIme);
     }
+
+    public Menadzer save(Menadzer menadzer) {
+        return  menadzerRepository.save(menadzer);
+    }
 }
