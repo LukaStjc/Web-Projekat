@@ -3,6 +3,7 @@ package SistemZaNarucivanjeHrane.demo.controller;
 import SistemZaNarucivanjeHrane.demo.dto.LoginDto;
 import SistemZaNarucivanjeHrane.demo.dto.NoviKorisnikDto;
 import SistemZaNarucivanjeHrane.demo.model.Korisnik;
+import SistemZaNarucivanjeHrane.demo.model.Restoran;
 import SistemZaNarucivanjeHrane.demo.model.TipPola;
 import SistemZaNarucivanjeHrane.demo.service.KorisnikService;
 import SistemZaNarucivanjeHrane.demo.service.KupacService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @RestController
 public class KorisnikRestController {
@@ -108,6 +110,13 @@ public class KorisnikRestController {
 
         korisnikService.save(ulogovaniKorisnik);
         return ResponseEntity.ok("Uspesno ste izmenili svoje podatke");
+
+    }
+
+    @GetMapping("api/restorani")
+    public ResponseEntity<List<Restoran>> getRestorani() {
+        List<Restoran> restorani = korisnikService.findAllRestorani();
+        return ResponseEntity.ok(restorani);
 
     }
 

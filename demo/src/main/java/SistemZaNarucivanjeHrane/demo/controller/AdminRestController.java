@@ -70,7 +70,6 @@ public class AdminRestController {
 
         return new ResponseEntity<>("Dozvoljeno je kreirati samo dostavljaca ili menadzera", HttpStatus.BAD_REQUEST);
 
-
     }
 
 

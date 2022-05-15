@@ -5,6 +5,8 @@ import SistemZaNarucivanjeHrane.demo.repository.RestoranRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class RestoranService {
 
@@ -13,5 +15,9 @@ public class RestoranService {
 
     public Restoran findByNaziv(String naziv) {
         return restoranRepository.findByNaziv(naziv);
+    }
+
+    public List<Restoran> findAll() {
+        return restoranRepository.findAll();
     }
 }

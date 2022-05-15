@@ -1,6 +1,7 @@
 package SistemZaNarucivanjeHrane.demo.service;
 
 import SistemZaNarucivanjeHrane.demo.model.Korisnik;
+import SistemZaNarucivanjeHrane.demo.model.Restoran;
 import SistemZaNarucivanjeHrane.demo.model.TipPola;
 import SistemZaNarucivanjeHrane.demo.repository.KorisnikRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class KorisnikService {
 
     @Autowired
     MenadzerService menadzerService;
+
+    @Autowired
+    RestoranService restoranService;
 
     public Korisnik findByKorisnickoIme(String korisnickoIme){
         return korisnikRepository.findByKorisnickoIme(korisnickoIme);
@@ -47,5 +51,9 @@ public class KorisnikService {
 
     public Korisnik registracija(String korisnickoIme, String lozinka, String ime, String prezime, TipPola tipPola, LocalDate datumRodjenja) {
         return kupacService.registracija(korisnickoIme, lozinka, ime, prezime, tipPola, datumRodjenja);
+    }
+
+    public List<Restoran> findAllRestorani() {
+        return restoranService.findAll();
     }
 }
