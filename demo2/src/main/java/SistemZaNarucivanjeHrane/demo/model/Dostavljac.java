@@ -2,7 +2,7 @@ package SistemZaNarucivanjeHrane.demo.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,7 +18,7 @@ public class Dostavljac extends Korisnik implements Serializable {
         super.setTipUloge(TipUloge.DOSTAVLJAC);
     }
 
-    public Dostavljac(String korisnickoIme, String lozinka, String ime, String prezime, TipPola tipPola, Date datumRodjenja) {
+    public Dostavljac(String korisnickoIme, String lozinka, String ime, String prezime, TipPola tipPola, LocalDate datumRodjenja) {
         super(korisnickoIme, lozinka, ime, prezime, tipPola, datumRodjenja);
         super.setTipUloge(TipUloge.DOSTAVLJAC);
     }

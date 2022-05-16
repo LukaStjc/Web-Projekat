@@ -1,18 +1,26 @@
 package SistemZaNarucivanjeHrane.demo.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.io.Serializable;
 
 @Entity
-public class Lokacija {
-    private String geografskaDuzina;
-    private String geografskaSirina;
+public class Lokacija implements Serializable{
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long ID;
+
+    private double geografskaDuzina;
+    private double geografskaSirina;
     private String adresa;
 
     public Lokacija() {
     }
 
-    public Lokacija(String geografskaDuzina, String geografskaSirina, String adresa) {
+    public Lokacija(double geografskaDuzina, double geografskaSirina, String adresa) {
         this.geografskaDuzina = geografskaDuzina;
         this.geografskaSirina = geografskaSirina;
         this.adresa = adresa;
@@ -22,19 +30,19 @@ public class Lokacija {
         this.adresa = adresa;
     }
 
-    public void setGeografskaDuzina(String geografskaDuzina) {
+    public void setGeografskaDuzina(double geografskaDuzina) {
         this.geografskaDuzina = geografskaDuzina;
     }
 
-    public void setGeografskaSirina(String geografskaSirina) {
+    public void setGeografskaSirina(double geografskaSirina) {
         this.geografskaSirina = geografskaSirina;
     }
 
-    public String getGeografskaDuzina() {
+    public double getGeografskaDuzina() {
         return geografskaDuzina;
     }
 
-    public String getGeografskaSirina() {
+    public double getGeografskaSirina() {
         return geografskaSirina;
     }
 

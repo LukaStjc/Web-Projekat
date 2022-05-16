@@ -1,6 +1,18 @@
 package SistemZaNarucivanjeHrane.demo.model;
 
-public class TipKupca { // ako ne radi program, probati da se ovde doda entity i impl serialisable
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import java.io.Serializable;
+
+@Entity
+public class TipKupca implements Serializable { // ako ne radi program, probati da se ovde doda entity i impl serialisable
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long ID;
+
     private String rang;    // u specifikaciji zadatka pise ime, ja sam to nazvao rang
 
     private double popust;  /* implementiracu ovo tako da popust bude izmedju 0 i 100 i da to predstavlja %

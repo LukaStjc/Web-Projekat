@@ -1,6 +1,5 @@
 package SistemZaNarucivanjeHrane.demo.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
@@ -11,6 +10,7 @@ import java.util.Set;
 
 @Entity
 public class Kupac extends Korisnik implements Serializable {
+
     @OneToMany(mappedBy = "kupac", fetch = FetchType.LAZY)  // bidirektna
     private Set<Porudzbina> porudzbine = new HashSet<>();
 

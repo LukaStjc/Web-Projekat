@@ -4,7 +4,6 @@ import com.sun.xml.bind.v2.TODO;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 

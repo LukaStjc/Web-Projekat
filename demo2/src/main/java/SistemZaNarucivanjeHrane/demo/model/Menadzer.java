@@ -2,7 +2,7 @@ package SistemZaNarucivanjeHrane.demo.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 public class Menadzer extends Korisnik implements Serializable {
@@ -16,7 +16,7 @@ public class Menadzer extends Korisnik implements Serializable {
         super.setTipUloge(TipUloge.MENADZER);
     }
 
-    public Menadzer(String korisnickoIme, String lozinka, String ime, String prezime, TipPola tipPola, Date datumRodjenja, Restoran restoran) {
+    public Menadzer(String korisnickoIme, String lozinka, String ime, String prezime, TipPola tipPola, LocalDate datumRodjenja, Restoran restoran) {
         super(korisnickoIme, lozinka, ime, prezime, tipPola, datumRodjenja);
         super.setTipUloge(TipUloge.MENADZER);
         this.restoran = restoran;

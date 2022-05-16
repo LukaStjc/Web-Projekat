@@ -3,6 +3,7 @@ package SistemZaNarucivanjeHrane.demo.model;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -24,8 +25,7 @@ public class Porudzbina implements Serializable {
     @JoinColumn(name = "restoran_id")
     private Restoran restoran;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date datumIVreme;
+    private LocalDateTime datumIVreme;
 
     private long cena;
 
@@ -38,8 +38,7 @@ public class Porudzbina implements Serializable {
     public Porudzbina() {
     }
 
-    public Porudzbina(UUID ID, Set<Artikal> poruceniArtikli, Restoran restoran, Date datumIVreme, long cena, Kupac kupac, Status status) {
-        this.ID = ID;
+    public Porudzbina(Set<Artikal> poruceniArtikli, Restoran restoran, LocalDateTime datumIVreme, long cena, Kupac kupac, Status status) {
         this.poruceniArtikli = poruceniArtikli;
         this.restoran = restoran;
         this.datumIVreme = datumIVreme;
@@ -56,9 +55,9 @@ public class Porudzbina implements Serializable {
 
     public void setRestoran(Restoran restoran) { this.restoran = restoran; }
 
-    public Date getDatumIVreme() { return datumIVreme; }
+    public LocalDateTime getDatumIVreme() { return datumIVreme; }
 
-    public void setDatumIVreme(Date datumIVreme) { this.datumIVreme = datumIVreme; }
+    public void setDatumIVreme(LocalDateTime datumIVreme) { this.datumIVreme = datumIVreme; }
 
     public long getCena() { return cena; }
 

@@ -1,9 +1,11 @@
 package SistemZaNarucivanjeHrane.demo.model;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.time.LocalDate;
 
+@Entity
 public abstract class Korisnik {
 
     @Id
