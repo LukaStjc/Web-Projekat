@@ -3,10 +3,9 @@ package SistemZaNarucivanjeHrane.demo.controller;
 import SistemZaNarucivanjeHrane.demo.dto.LoginDto;
 import SistemZaNarucivanjeHrane.demo.dto.NoviKorisnikDto;
 import SistemZaNarucivanjeHrane.demo.model.Korisnik;
-import SistemZaNarucivanjeHrane.demo.model.Restoran;
 import SistemZaNarucivanjeHrane.demo.model.TipPola;
+import SistemZaNarucivanjeHrane.demo.model.TipUloge;
 import SistemZaNarucivanjeHrane.demo.service.KorisnikService;
-import SistemZaNarucivanjeHrane.demo.service.KupacService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +18,6 @@ import java.util.List;
 
 @RestController
 public class KorisnikRestController {
-    @Autowired
-    KupacService kupacService;
 
     @Autowired
     KorisnikService korisnikService;
@@ -83,11 +80,11 @@ public class KorisnikRestController {
         if(!korisnickoIme.equals(ulogovaniKorisnik.getKorisnickoIme()))
             return new ResponseEntity("Mozete da pristupite samo svojim podacima", HttpStatus.BAD_REQUEST);
 
-        session.invalidate();
         return ResponseEntity.ok(korisnikService.findByKorisnickoIme(ulogovaniKorisnik.getKorisnickoIme()));
 
     }
 
+    //TODO dodaj da izbaci neku poruku ako pokusas da promenis korisnicko ime u neko koje vec postoji
     @PutMapping("/api/izmena")
     public ResponseEntity<String> izmeniPodatkeUlogovanogKorisnika(@RequestBody NoviKorisnikDto noviKorisnikDto, HttpSession session) {
         Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
@@ -113,11 +110,18 @@ public class KorisnikRestController {
 
     }
 
-    @GetMapping("api/restorani")
-    public ResponseEntity<List<Restoran>> getRestorani() {
-        List<Restoran> restorani = korisnikService.findAllRestorani();
-        return ResponseEntity.ok(restorani);
+    @GetMapping("/api/korisnici")
+    public ResponseEntity<List<Korisnik>> getKorisnici(HttpSession session) {
 
+        Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
+
+        if(ulogovaniKorisnik == null)
+            return new ResponseEntity("Niste ulogovani.", HttpStatus.BAD_REQUEST);
+        if(ulogovaniKorisnik.getTipUloge() != TipUloge.ADMIN)
+            return new ResponseEntity("Ova funkcionalnost je dostupna samo administratorima", HttpStatus.BAD_REQUEST);
+
+        List<Korisnik> korisnici = korisnikService.findAll();
+        return ResponseEntity.ok(korisnici);
     }
 
 }

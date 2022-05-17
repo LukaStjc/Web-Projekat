@@ -26,10 +26,10 @@ public class Restoran implements Serializable {
     public Restoran() {
     }
 
-    public Restoran(String naziv, String tip, Set<Artikal> jelovnik, Lokacija lokacija) {
+    //ne menjaj konstruktor, neka bude null jelovnik na pocetku uvek, a posle ako hoces setuj ga preko setera
+    public Restoran(String naziv, String tip, Lokacija lokacija) {
         this.naziv = naziv;
         this.tip = tip;
-        this.jelovnik = jelovnik;
         this.lokacija = lokacija;
     }
 
@@ -44,6 +44,8 @@ public class Restoran implements Serializable {
     public void setTip(String tip) { this.tip = tip; }
 
     public Set<Artikal> getJelovnik() { return jelovnik; }
+
+    public void setJelovnik(Set<Artikal> jelovnik) { this.jelovnik = jelovnik; }
 
     public Lokacija getLokacija() { return lokacija; }
 

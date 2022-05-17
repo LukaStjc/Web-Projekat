@@ -11,9 +11,7 @@ public class MenadzerService {
     @Autowired
     private MenadzerRepository menadzerRepository;
 
-    public Menadzer findByKorisnickoIme(String korisnickoIme) {
-        return menadzerRepository.findByKorisnickoIme(korisnickoIme);
-    }
+    public Menadzer findByKorisnickoIme(String korisnickoIme) { return menadzerRepository.findByKorisnickoIme(korisnickoIme); }
 
     public Menadzer save(Menadzer menadzer) {
         return  menadzerRepository.save(menadzer);
