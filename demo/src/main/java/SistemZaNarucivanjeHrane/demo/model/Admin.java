@@ -1,10 +1,11 @@
 package SistemZaNarucivanjeHrane.demo.model;
 
 import javax.persistence.Entity;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
-public class Admin extends Korisnik{
+public class Admin extends Korisnik implements Serializable {
     public Admin() {
         super();
         super.setTipUloge(TipUloge.ADMIN);
