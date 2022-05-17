@@ -25,6 +25,11 @@ public class RestoranService {
         return restoranRepository.findByNaziv(naziv);
     }
 
+    public Restoran findByTip(String tip) {
+        return restoranRepository.findByTip(tip);
+    }
+
+
     public List<Restoran> findAll() {
         return restoranRepository.findAll();
     }
