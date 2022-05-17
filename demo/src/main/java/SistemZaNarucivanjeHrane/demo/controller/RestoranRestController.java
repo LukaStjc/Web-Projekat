@@ -76,4 +76,41 @@ public class RestoranRestController {
         return ResponseEntity.ok(izlazniRestorani);
 
     }
+
+    @PostMapping("/api/pretrazi")
+    public ResponseEntity<List<Restoran>> getRestoranPoNazivu(@RequestBody RestoranDto restoranDto) {
+
+        List<Restoran> restoranList = restoranService.findAll();
+        List<Restoran> trazeniRestorani = new ArrayList<>();
+
+        if(restoranDto.getNaziv() != null) {
+            for (Restoran restoran : restoranList) {
+                if (restoran.getNaziv().contains(restoranDto.getNaziv())) {
+                    trazeniRestorani.add(restoran);
+                }
+            }
+        }
+
+        if(restoranDto.getTip() != null) {
+            for (Restoran restoran : restoranList) {
+                if (restoran.getTip().contains(restoranDto.getTip())) {
+                    trazeniRestorani.add(restoran);
+                }
+            }
+        }
+
+        if(restoranDto.getAdresa() != null) {
+            for (Restoran restoran : restoranList) {
+                if (restoran.getLokacija().getAdresa().contains(restoranDto.getAdresa())) {
+                    trazeniRestorani.add(restoran);
+                }
+            }
+        }
+
+
+        if(trazeniRestorani.isEmpty())
+            return new ResponseEntity("Ne postoji restoran sa unetim nazivom", HttpStatus.BAD_REQUEST);
+
+        return ResponseEntity.ok(trazeniRestorani);
+    }
 }
