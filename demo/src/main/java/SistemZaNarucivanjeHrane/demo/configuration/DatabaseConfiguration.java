@@ -70,9 +70,9 @@ public class DatabaseConfiguration {
         Kupac kupacAnja = new Kupac("anjamilosevic", "anjamanjam", "Anja" , "Milosevic", TipPola.ZENSKI, LocalDate.of(1978, 05 , 10), 24, tipKupca);
         kupacRepository.save(kupacAnja);
 
-        Lokacija lokacijaSrpskaSicilija = new Lokacija("60" , "22", "Veselina Maslese 54A");
+        Lokacija lokacijaSrpskaSicilija = new Lokacija(60 , 22, "Veselina Maslese 54A");
         lokacijaRepository.save(lokacijaSrpskaSicilija);
-        Lokacija lokacijaMorskiRaj = new Lokacija("25" , "89", "Kace Dejanovic 42");
+        Lokacija lokacijaMorskiRaj = new Lokacija(25 , 89, "Kace Dejanovic 42");
         lokacijaRepository.save(lokacijaMorskiRaj);
 
         Set<Artikal> jelovnikSrpskaSicilija = new HashSet<>();
@@ -82,9 +82,11 @@ public class DatabaseConfiguration {
         Set<Artikal> jelovnikMorskiRaj = new HashSet<>();
         jelovnikMorskiRaj.add(pastrmka);
 
-        Restoran restoranSrpskaSicilija = new Restoran("Srpska Sicilija", "italijanski", jelovnikSrpskaSicilija, lokacijaSrpskaSicilija);
+        Restoran restoranSrpskaSicilija = new Restoran("Srpska Sicilija", "italijanski", lokacijaSrpskaSicilija);
+        restoranSrpskaSicilija.setJelovnik(jelovnikSrpskaSicilija);
         restoranRepository.save(restoranSrpskaSicilija);
-        Restoran restoranMorskiRaj = new Restoran("Morski raj", "mediteranski", jelovnikMorskiRaj, lokacijaMorskiRaj);
+        Restoran restoranMorskiRaj = new Restoran("Morski raj", "mediteranski", lokacijaMorskiRaj);
+        restoranMorskiRaj.setJelovnik(jelovnikMorskiRaj);
         restoranRepository.save(restoranMorskiRaj);
 
         Menadzer menadzerAna = new Menadzer("anaparovic", "anabanana", "Ana", "Parovic", TipPola.ZENSKI, LocalDate.of(2001, 12, 13), restoranSrpskaSicilija);

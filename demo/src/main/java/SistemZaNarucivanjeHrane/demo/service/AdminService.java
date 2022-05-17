@@ -22,9 +22,14 @@ public class AdminService {
     @Autowired
     DostavljacService dostavljacService;
 
+    @Autowired
+    LokacijaService lokacijaService;
+
     public Restoran findRestoranByNaziv(String naziv) {
         return restoranService.findByNaziv(naziv);
     }
+
+    public Menadzer findMenadzerByKorisnickoIme(String korisnickoIme) { return menadzerService.findByKorisnickoIme(korisnickoIme); }
 
     public Menadzer saveMenadzer(Menadzer menadzer) {
         return menadzerService.save(menadzer);
@@ -33,4 +38,6 @@ public class AdminService {
     public Dostavljac saveDostavljac(Dostavljac dostavljac) {
         return dostavljacService.save(dostavljac);
     }
+
+
 }

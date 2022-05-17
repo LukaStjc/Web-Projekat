@@ -9,7 +9,7 @@ public class MenadzerDostavljacDto {
     private String ime;
 
     private String prezime;
-
+    //promeni u pol
     private String tipPola;
 
     private String datumRodjenja;
