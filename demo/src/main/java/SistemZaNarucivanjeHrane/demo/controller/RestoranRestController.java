@@ -1,19 +1,17 @@
 package SistemZaNarucivanjeHrane.demo.controller;
 
+import SistemZaNarucivanjeHrane.demo.dto.ArtikalDto;
 import SistemZaNarucivanjeHrane.demo.model.Restoran;
 import SistemZaNarucivanjeHrane.demo.dto.RestoranDto;
 import SistemZaNarucivanjeHrane.demo.dto.RestoranIzlazniDto;
 import SistemZaNarucivanjeHrane.demo.model.*;
+import SistemZaNarucivanjeHrane.demo.service.ArtikalService;
 import SistemZaNarucivanjeHrane.demo.service.RestoranService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
@@ -26,26 +24,59 @@ public class RestoranRestController {
     @Autowired
     private RestoranService restoranService;
 
-    @GetMapping("/api/restoran/{naziv}")
-    public ResponseEntity<Restoran> getRestoranPoNazivu(String naziv) {
-        Restoran restoran = restoranService.findByNaziv(naziv);
-        if (restoran == null) {
-            return new ResponseEntity("Ne postoji restoran sa tim nazivom", HttpStatus.NOT_FOUND);
+    @Autowired
+    private ArtikalService artikalService;
+
+    //TODO dodati sliku kao parametar metode
+    @PostMapping("/api/dodaj_artikal")
+    public ResponseEntity<String> addArtikal(@RequestBody ArtikalDto artikalDto, HttpSession session) {
+        Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
+
+        if (ulogovaniKorisnik == null) {
+            return new ResponseEntity<>("Niste ulogovani", HttpStatus.BAD_REQUEST);
+        }
+        if (ulogovaniKorisnik.getTipUloge() != TipUloge.MENADZER) {
+            return new ResponseEntity<>("Ova funkcionalnost je dostupna samo menadzerima", HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity(restoran, HttpStatus.OK);
+        Artikal artikal =new Artikal(artikalDto.getNaziv(), artikalDto.getCena(), artikalDto.getTip(), artikalDto.getKolicina(), artikalDto.getOpis());
+        artikalService.save(artikal);
+
+        Menadzer ulogovaniMenadzer = (Menadzer) ulogovaniKorisnik;
+        Restoran restoran = ulogovaniMenadzer.getRestoran();
+
+        restoran.getJelovnik().add(artikal);
+        restoranService.save(restoran);
+
+        return ResponseEntity.ok("Uspesno dodat artikal");
+
     }
 
-    @GetMapping("/api/restoran/{tip}")
-    public ResponseEntity<Restoran> getRestoranPoTipu(String tip) {
-        Restoran restoran = restoranService.findByTip(tip);
-        if (restoran == null) {
-            return new ResponseEntity("Ne postoji restoran sa tim tipom", HttpStatus.NOT_FOUND);
+    @DeleteMapping("/api/ukloni_artikal/{id}")
+    public ResponseEntity<String> obrisi_artikal(@PathVariable(name = "id") Long id, HttpSession session) {
+        Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
+
+        if (ulogovaniKorisnik == null) {
+            return new ResponseEntity<>("Niste ulogovani", HttpStatus.BAD_REQUEST);
+        }
+        if (ulogovaniKorisnik.getTipUloge() != TipUloge.MENADZER) {
+            return new ResponseEntity<>("Ova funkcionalnost je dostupna samo menadzerima", HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity(restoran, HttpStatus.OK);
-    }
+        Menadzer ulogovaniMenadzer = (Menadzer) ulogovaniKorisnik;
+        Restoran restoran = ulogovaniMenadzer.getRestoran();
 
+        for(Artikal artikal : restoran.getJelovnik()){
+            if(artikal.getID().equals(id)){
+                restoran.getJelovnik().remove(artikal);
+                restoranService.save(restoran);
+                return  ResponseEntity.ok("Uspesno obrisan artikal");
+            }
+        }
+
+        return new ResponseEntity<>("Ne postoji artikal sa tim id-jem za restoran za koji je zaduzen ulogovani menadzer", HttpStatus.NOT_FOUND);
+
+    }
 
     //TODO videti da li ovako staviti mapiranje ili dodati neki menadzer id ali po meni nema potrebe kad vec uzimamo ulogovanog menadzera
     //mozda da mapiranje bude /api/{menadzerId}/restoran
@@ -54,9 +85,9 @@ public class RestoranRestController {
     public ResponseEntity<Restoran> getRestorani(HttpSession session) {
         Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
 
-        if(ulogovaniKorisnik == null)
+        if (ulogovaniKorisnik == null)
             return new ResponseEntity("Niste ulogovani.", HttpStatus.BAD_REQUEST);
-        if(ulogovaniKorisnik.getTipUloge() != TipUloge.MENADZER)
+        if (ulogovaniKorisnik.getTipUloge() != TipUloge.MENADZER)
             return new ResponseEntity("Ova funkcionalnost je dostupna samo menadzerima", HttpStatus.BAD_REQUEST);
 
         Menadzer ulogovaniMenadzer = (Menadzer) ulogovaniKorisnik;
@@ -68,11 +99,11 @@ public class RestoranRestController {
     public ResponseEntity<String> kreirajRestoran(@RequestBody RestoranDto restoranDto, HttpSession session) {
         Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
 
-        if(ulogovaniKorisnik == null)
+        if (ulogovaniKorisnik == null)
             return new ResponseEntity("Niste ulogovani.", HttpStatus.BAD_REQUEST);
-        if(ulogovaniKorisnik.getTipUloge() != TipUloge.ADMIN)
+        if (ulogovaniKorisnik.getTipUloge() != TipUloge.ADMIN)
             return new ResponseEntity("Ova funkcionalnost je dostupna samo administratorima", HttpStatus.BAD_REQUEST);
-        if(restoranService.findMenadzerByKorisnickoIme(restoranDto.getMenadzer()) == null)
+        if (restoranService.findMenadzerByKorisnickoIme(restoranDto.getMenadzer()) == null)
             return new ResponseEntity("Uneti menadzer ne postoji", HttpStatus.BAD_REQUEST);
 
         Lokacija lokacija = new Lokacija(restoranDto.getGeografskaDuzina(), restoranDto.getGeografskaSirina(), restoranDto.getAdresa());
@@ -94,7 +125,7 @@ public class RestoranRestController {
     public ResponseEntity<List<RestoranIzlazniDto>> getRestorani() {
         List<Restoran> restorani = restoranService.findAll();
         List<RestoranIzlazniDto> izlazniRestorani = new ArrayList<>();
-        for(Restoran restoran : restorani) {
+        for (Restoran restoran : restorani) {
             izlazniRestorani.add(new RestoranIzlazniDto(restoran.getNaziv(), restoran.getTip(), restoran.getLokacija().getAdresa()));
         }
 

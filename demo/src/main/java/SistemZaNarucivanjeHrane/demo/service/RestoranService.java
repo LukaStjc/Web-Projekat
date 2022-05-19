@@ -1,5 +1,6 @@
 package SistemZaNarucivanjeHrane.demo.service;
 
+import SistemZaNarucivanjeHrane.demo.model.Artikal;
 import SistemZaNarucivanjeHrane.demo.model.Lokacija;
 import SistemZaNarucivanjeHrane.demo.model.Menadzer;
 import SistemZaNarucivanjeHrane.demo.model.Restoran;
@@ -7,7 +8,9 @@ import SistemZaNarucivanjeHrane.demo.repository.RestoranRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.awt.*;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class RestoranService {
@@ -21,6 +24,9 @@ public class RestoranService {
     @Autowired
     private LokacijaService lokacijaService;
 
+    @Autowired
+    private ArtikalService artikalService;
+
     public Restoran findByNaziv(String naziv) {
         return restoranRepository.findByNaziv(naziv);
     }
@@ -28,7 +34,6 @@ public class RestoranService {
     public Restoran findByTip(String tip) {
         return restoranRepository.findByTip(tip);
     }
-
 
     public List<Restoran> findAll() {
         return restoranRepository.findAll();

@@ -9,5 +9,5 @@ public interface KorisnikRepository extends JpaRepository<Korisnik,String> {
 
     Korisnik findByKorisnickoIme(String korisnickoIme);
 
-    Korisnik save(Korisnik korisnik);
+    //Korisnik save(Korisnik korisnik);
 }
