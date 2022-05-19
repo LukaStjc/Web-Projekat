@@ -13,7 +13,7 @@ public class Artikal implements Serializable {
     @Column(nullable = false) //ne moze naziv da bude null
     private String naziv;
 
-    private long cena;
+    private double cena;
 
     @Enumerated(EnumType.STRING)
     private TipArtikla tip;
@@ -25,7 +25,7 @@ public class Artikal implements Serializable {
     public Artikal() {
     }
 
-    public Artikal(String naziv, long cena, TipArtikla tip, double kolicina, String opis) {
+    public Artikal(String naziv, double cena, TipArtikla tip, double kolicina, String opis) {
         this.naziv = naziv;
         this.cena = cena;
         this.tip = tip;
@@ -39,9 +39,9 @@ public class Artikal implements Serializable {
 
     public void setNaziv(String naziv) { this.naziv = naziv; }
 
-    public long getCena() { return cena; }
+    public double getCena() { return cena; }
 
-    public void setCena(long cena) { this.cena = cena; }
+    public void setCena(double cena) { this.cena = cena; }
 
     public TipArtikla getTip() { return tip; }
 
