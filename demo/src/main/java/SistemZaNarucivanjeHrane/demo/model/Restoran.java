@@ -21,7 +21,10 @@ public class Restoran implements Serializable {
     private Set<Artikal> jelovnik = new HashSet<>();
 
     @OneToOne   //undirektna
+    @JoinColumn(name = "lokacija_id")
     private Lokacija lokacija;
+
+    boolean radi;
 
     public Restoran() {
     }
@@ -31,23 +34,50 @@ public class Restoran implements Serializable {
         this.naziv = naziv;
         this.tip = tip;
         this.lokacija = lokacija;
+        radi = true;
     }
 
-    public Long getID() { return ID; }
+    public Long getID() {
+        return ID;
+    }
 
-    public String getNaziv() { return naziv; }
+    public String getNaziv() {
+        return naziv;
+    }
 
-    public void setNaziv(String naziv) { this.naziv = naziv; }
+    public void setNaziv(String naziv) {
+        this.naziv = naziv;
+    }
 
-    public String getTip() { return tip; }
+    public String getTip() {
+        return tip;
+    }
 
-    public void setTip(String tip) { this.tip = tip; }
+    public void setTip(String tip) {
+        this.tip = tip;
+    }
 
-    public Set<Artikal> getJelovnik() { return jelovnik; }
+    public Set<Artikal> getJelovnik() {
+        return jelovnik;
+    }
 
-    public void setJelovnik(Set<Artikal> jelovnik) { this.jelovnik = jelovnik; }
+    public void setJelovnik(Set<Artikal> jelovnik) {
+        this.jelovnik = jelovnik;
+    }
 
-    public Lokacija getLokacija() { return lokacija; }
+    public Lokacija getLokacija() {
+        return lokacija;
+    }
 
-    public void setLokacija(Lokacija lokacija) { this.lokacija = lokacija; }
+    public void setLokacija(Lokacija lokacija) {
+        this.lokacija = lokacija;
+    }
+
+    public boolean isRadi() {
+        return radi;
+    }
+
+    public void setRadi(boolean radi) {
+        this.radi = radi;
+    }
 }

@@ -1,11 +1,11 @@
 package SistemZaNarucivanjeHrane.demo.controller;
 
-import SistemZaNarucivanjeHrane.demo.dto.ArtikalDto;
+import SistemZaNarucivanjeHrane.demo.dto.*;
 import SistemZaNarucivanjeHrane.demo.model.Restoran;
-import SistemZaNarucivanjeHrane.demo.dto.RestoranDto;
-import SistemZaNarucivanjeHrane.demo.dto.RestoranIzlazniDto;
 import SistemZaNarucivanjeHrane.demo.model.*;
 import SistemZaNarucivanjeHrane.demo.service.ArtikalService;
+import SistemZaNarucivanjeHrane.demo.service.KomentarService;
+import SistemZaNarucivanjeHrane.demo.service.PorudzbinaService;
 import SistemZaNarucivanjeHrane.demo.service.RestoranService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,31 +16,29 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RestController
+@RequestMapping(value = "/api/")
 public class RestoranRestController {
 
     @Autowired
     private RestoranService restoranService;
 
-    @Autowired
-    private ArtikalService artikalService;
-
     //TODO dodati sliku kao parametar metode
-    @PostMapping("/api/dodaj_artikal")
+    @PostMapping("dodaj_artikal")
     public ResponseEntity<String> addArtikal(@RequestBody ArtikalDto artikalDto, HttpSession session) {
         Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
 
-        if (ulogovaniKorisnik == null) {
+        if (ulogovaniKorisnik == null)
             return new ResponseEntity<>("Niste ulogovani", HttpStatus.BAD_REQUEST);
-        }
-        if (ulogovaniKorisnik.getTipUloge() != TipUloge.MENADZER) {
+        if (ulogovaniKorisnik.getTipUloge() != TipUloge.MENADZER)
             return new ResponseEntity<>("Ova funkcionalnost je dostupna samo menadzerima", HttpStatus.BAD_REQUEST);
-        }
 
-        Artikal artikal =new Artikal(artikalDto.getNaziv(), artikalDto.getCena(), artikalDto.getTip(), artikalDto.getKolicina(), artikalDto.getOpis());
-        artikalService.save(artikal);
+        Artikal artikal = new Artikal(artikalDto.getNaziv(), artikalDto.getCena(), artikalDto.getTip(), artikalDto.getKolicina(), artikalDto.getOpis());
+        restoranService.saveArtikal(artikal);
 
         Menadzer ulogovaniMenadzer = (Menadzer) ulogovaniKorisnik;
         Restoran restoran = ulogovaniMenadzer.getRestoran();
@@ -52,25 +50,24 @@ public class RestoranRestController {
 
     }
 
-    @DeleteMapping("/api/ukloni_artikal/{id}")
-    public ResponseEntity<String> obrisi_artikal(@PathVariable(name = "id") Long id, HttpSession session) {
+    @DeleteMapping("ukloni_artikal/{id}")
+    public ResponseEntity<String> removeArtikal(@PathVariable(name = "id") Long id, HttpSession session) {
         Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
 
-        if (ulogovaniKorisnik == null) {
+        if (ulogovaniKorisnik == null)
             return new ResponseEntity<>("Niste ulogovani", HttpStatus.BAD_REQUEST);
-        }
-        if (ulogovaniKorisnik.getTipUloge() != TipUloge.MENADZER) {
+        if (ulogovaniKorisnik.getTipUloge() != TipUloge.MENADZER)
             return new ResponseEntity<>("Ova funkcionalnost je dostupna samo menadzerima", HttpStatus.BAD_REQUEST);
-        }
 
         Menadzer ulogovaniMenadzer = (Menadzer) ulogovaniKorisnik;
         Restoran restoran = ulogovaniMenadzer.getRestoran();
 
-        for(Artikal artikal : restoran.getJelovnik()){
-            if(artikal.getID().equals(id)){
+        for (Artikal artikal : restoran.getJelovnik()) {
+            if (artikal.getID().equals(id)) {
                 restoran.getJelovnik().remove(artikal);
+                restoranService.deleteArtikal(artikal);
                 restoranService.save(restoran);
-                return  ResponseEntity.ok("Uspesno obrisan artikal");
+                return ResponseEntity.ok("Uspesno obrisan artikal");
             }
         }
 
@@ -78,10 +75,47 @@ public class RestoranRestController {
 
     }
 
-    //TODO videti da li ovako staviti mapiranje ili dodati neki menadzer id ali po meni nema potrebe kad vec uzimamo ulogovanog menadzera
-    //mozda da mapiranje bude /api/{menadzerId}/restoran
-    //TODO srediti da ima i prikaz svih porudzbina za restoran
-    @GetMapping("/api/restoran")
+    @PutMapping("izmeni_artikal/{id}")
+    public ResponseEntity<String> changeArtikal(@PathVariable(name = "id") Long id, @RequestBody ArtikalDto artikalDto, HttpSession session) {
+        Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
+
+        if (ulogovaniKorisnik == null)
+            return new ResponseEntity<>("Niste ulogovani", HttpStatus.BAD_REQUEST);
+        if (ulogovaniKorisnik.getTipUloge() != TipUloge.MENADZER)
+            return new ResponseEntity<>("Ova funkcionalnost je dostupna samo menadzerima", HttpStatus.BAD_REQUEST);
+
+        Menadzer ulogovaniMenadzer = (Menadzer) ulogovaniKorisnik;
+        Restoran restoran = ulogovaniMenadzer.getRestoran();
+
+        for (Artikal artikal : restoran.getJelovnik()) {
+            if (artikal.getID().equals(id)) {
+                if (artikalDto.getCena() != 0) {
+                    artikal.setCena(artikalDto.getCena());
+                }
+                if (artikalDto.getKolicina() != 0) {
+                    artikal.setKolicina(artikalDto.getKolicina());
+                }
+                if (artikalDto.getOpis() != null) {
+                    artikal.setOpis(artikalDto.getOpis());
+                }
+                if (artikalDto.getTip() != null) {
+                    artikal.setTip(artikalDto.getTip());
+                }
+                if (artikalDto.getNaziv() != null) {
+                    artikal.setNaziv(artikalDto.getNaziv());
+                }
+
+                restoranService.saveArtikal(artikal);
+                return ResponseEntity.ok("Uspesno izmenjen artikal");
+            }
+        }
+
+        return new ResponseEntity<>("Nije pronadjen artikal sa tim id-jem u jelovniku restorana za koji ste zaduzeni", HttpStatus.NOT_FOUND);
+
+
+    }
+
+    @GetMapping("moj_restoran")
     public ResponseEntity<Restoran> getRestorani(HttpSession session) {
         Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
 
@@ -95,7 +129,40 @@ public class RestoranRestController {
         return ResponseEntity.ok(restoran);
     }
 
-    @PostMapping("/api/kreiraj_restoran")
+    /* ova funkcionalnost je povezana sa "pretrazi", jer je tamo prikazan uzi izbor restorana, a ovo je bas detaljan prikaz jednog
+    restorana koji ce biti izabran. Stavio sam da ga trazi po id-ju, sto znaci da ce u frontendu biti potrebnu proslediti id ovoj
+    funkciji iz funkcije pretrazi (npr klikom na sliku)*/
+    @GetMapping("restoran/{id}")
+    public ResponseEntity<RestoranDetaljno> prikazOdabranogRestorana(@PathVariable(name = "id") Long id, HttpSession session) {
+        Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
+
+        if (ulogovaniKorisnik == null)
+            return new ResponseEntity("Niste ulogovani.", HttpStatus.BAD_REQUEST);
+
+        Restoran restoran = restoranService.findRestoranById(id);
+        List<Komentar> komentari = new ArrayList<>();
+
+        komentari = restoranService.findAllKomentari();
+        // ovde ide provera da li je odredjeni komentar vezan za restoran, ako nije, brise se iz liste komentara i tako tamo ostaju
+        // samo komentari koji su vezani bas za restoran koji treba da se prikaze
+        komentari.removeIf(k -> !(k.getRestoran().getID().equals(restoran.getID())));
+        List<KomentarDto> komentariDto = new ArrayList<>();
+
+        double prosecnaOcena = 0.0;
+        int brojKomentara = 0;
+        for (Komentar k : komentari) {  // u ovoj petlji racunam prosecnu ocenu iz komentara a i pravim listu komentara Dto
+            prosecnaOcena += k.getOcena();
+            brojKomentara++;
+            KomentarDto tmp = new KomentarDto(k.getTekst(), k.getOcena());
+            komentariDto.add(tmp);
+        }
+        prosecnaOcena /= brojKomentara;
+
+        RestoranDetaljno restoranDetaljno = new RestoranDetaljno(restoran.getNaziv(), restoran.getTip(), restoran.isRadi(), restoran.getLokacija(), komentariDto, restoran.getJelovnik(), prosecnaOcena);
+        return ResponseEntity.ok(restoranDetaljno);
+    }
+
+    @PostMapping("kreiraj_restoran")
     public ResponseEntity<String> kreirajRestoran(@RequestBody RestoranDto restoranDto, HttpSession session) {
         Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
 
@@ -120,8 +187,7 @@ public class RestoranRestController {
 
     }
 
-    //TODO da budu samo neke osnovne informacije o restoranima ne bas sve
-    @GetMapping("api/restorani")
+    @GetMapping("restorani")    // ovo ide kao pocetna strana gde se vide svi restorani
     public ResponseEntity<List<RestoranIzlazniDto>> getRestorani() {
         List<Restoran> restorani = restoranService.findAll();
         List<RestoranIzlazniDto> izlazniRestorani = new ArrayList<>();
@@ -133,13 +199,13 @@ public class RestoranRestController {
 
     }
 
-    @PostMapping("/api/pretrazi")
+    @GetMapping("pretrazi")
     public ResponseEntity<List<Restoran>> getRestoranPoNazivu(@RequestBody RestoranDto restoranDto) {
 
         List<Restoran> restoranList = restoranService.findAll();
         List<Restoran> trazeniRestorani = new ArrayList<>();
 
-        if(restoranDto.getNaziv() != null) {
+        if (restoranDto.getNaziv() != null) {
             for (Restoran restoran : restoranList) {
                 if (restoran.getNaziv().contains(restoranDto.getNaziv())) {
                     trazeniRestorani.add(restoran);
@@ -147,7 +213,7 @@ public class RestoranRestController {
             }
         }
 
-        if(restoranDto.getTip() != null) {
+        if (restoranDto.getTip() != null) {
             for (Restoran restoran : restoranList) {
                 if (restoran.getTip().contains(restoranDto.getTip())) {
                     trazeniRestorani.add(restoran);
@@ -155,7 +221,7 @@ public class RestoranRestController {
             }
         }
 
-        if(restoranDto.getAdresa() != null) {
+        if (restoranDto.getAdresa() != null) {
             for (Restoran restoran : restoranList) {
                 if (restoran.getLokacija().getAdresa().contains(restoranDto.getAdresa())) {
                     trazeniRestorani.add(restoran);
@@ -164,7 +230,7 @@ public class RestoranRestController {
         }
 
 
-        if(trazeniRestorani.isEmpty())
+        if (trazeniRestorani.isEmpty())
             return new ResponseEntity("Ne postoji restoran sa unetim nazivom", HttpStatus.BAD_REQUEST);
 
         return ResponseEntity.ok(trazeniRestorani);

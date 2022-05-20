@@ -30,7 +30,7 @@ public class Porudzbina implements Serializable {
 
     private LocalDateTime datumIVreme;
 
-    private long cena;
+    private double cena;
 
     @ManyToOne(fetch = FetchType.LAZY) //bidirektna, mappedBy ide u klasu Kupac, imamo JsonIgnore
     private Kupac kupac;
@@ -41,7 +41,7 @@ public class Porudzbina implements Serializable {
     public Porudzbina() {
     }
 
-    public Porudzbina(UUID ID, Set<Artikal> poruceniArtikli, Restoran restoran, LocalDateTime datumIVreme, long cena, Kupac kupac, Status status) {
+    public Porudzbina(UUID ID, Set<Artikal> poruceniArtikli, Restoran restoran, LocalDateTime datumIVreme, double cena, Kupac kupac, Status status) {
         this.ID = ID;
         this.poruceniArtikli = poruceniArtikli;
         this.restoran = restoran;
@@ -63,9 +63,9 @@ public class Porudzbina implements Serializable {
 
     public void setDatumIVreme(LocalDateTime datumIVreme) { this.datumIVreme = datumIVreme; }
 
-    public long getCena() { return cena; }
+    public double getCena() { return cena; }
 
-    public void setCena(long cena) { this.cena = cena; }
+    public void setCena(double cena) { this.cena = cena; }
 
     public Status getStatus() { return status; }
 

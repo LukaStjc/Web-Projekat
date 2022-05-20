@@ -49,7 +49,7 @@ public class Artikal implements Serializable {
 
     public double getKolicina() { return kolicina; }
 
-    public void setKolicina(Long kolicina) { this.kolicina = kolicina; }
+    public void setKolicina(double kolicina) { this.kolicina = kolicina; }
 
     public String getOpis() { return opis; }
 

@@ -1,14 +1,13 @@
 package SistemZaNarucivanjeHrane.demo.service;
 
-import SistemZaNarucivanjeHrane.demo.model.Artikal;
-import SistemZaNarucivanjeHrane.demo.model.Lokacija;
-import SistemZaNarucivanjeHrane.demo.model.Menadzer;
-import SistemZaNarucivanjeHrane.demo.model.Restoran;
+import SistemZaNarucivanjeHrane.demo.model.*;
 import SistemZaNarucivanjeHrane.demo.repository.RestoranRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -27,12 +26,28 @@ public class RestoranService {
     @Autowired
     private ArtikalService artikalService;
 
+    @Autowired
+    private KomentarService komentarService;
+
     public Restoran findByNaziv(String naziv) {
         return restoranRepository.findByNaziv(naziv);
     }
 
     public Restoran findByTip(String tip) {
         return restoranRepository.findByTip(tip);
+    }
+
+    public Restoran findRestoranById(Long id){
+        List<Restoran> restorani = new ArrayList<>();
+        restorani= restoranRepository.findAll();
+
+        for(Restoran r:restorani){
+            if(r.getID().equals(id)){
+                return r;
+            }
+        }
+
+        return null;
     }
 
     public List<Restoran> findAll() {
@@ -48,4 +63,17 @@ public class RestoranService {
     }
 
     public Menadzer saveMenadzer(Menadzer menadzer) { return menadzerService.save(menadzer); }
+
+    public void saveArtikal(Artikal artikal){
+        artikalService.save(artikal);
+    }
+
+    public List<Komentar> findAllKomentari(){
+        return komentarService.findAll();
+    }
+
+    public void deleteArtikal(Artikal artikal){
+        artikalService.delete(artikal);
+    }
+
 }

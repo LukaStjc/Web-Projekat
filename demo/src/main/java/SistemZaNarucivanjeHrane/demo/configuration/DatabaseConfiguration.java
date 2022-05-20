@@ -53,6 +53,8 @@ public class DatabaseConfiguration {
         artikalRepository.save(pizza);
         Artikal pasta = new Artikal("Pasta carbonare", 360, TipArtikla.JELO, 2, "Pasta carbonare pravljena kao iz Italije");
         artikalRepository.save(pasta);
+        Artikal sendvic_sa_sirom = new Artikal("Senvic sa sirom", 250, TipArtikla.JELO, 1, "Svez ovciji sir");
+        artikalRepository.save(sendvic_sa_sirom);
 
         Dostavljac dostavljacSale = new Dostavljac("salecarina", "123456789", "Aleksandar", "Maric", TipPola.MUSKI, LocalDate.of(1988, 1, 8));
         dostavljacRepository.save(dostavljacSale);
@@ -63,17 +65,19 @@ public class DatabaseConfiguration {
 
         TipKupca tipKupca = new TipKupca("zlatni", 0.3, 33); //Lupila sam koji su podaci za tip kupca, to treba smisliti lepo
 
-        Kupac kupacSara = new Kupac("sarasavic", "sarasara", "Sara" , "Savic", TipPola.ZENSKI, LocalDate.of(1999, 12 , 10), 52, tipKupca);
+        Kupac kupacSara = new Kupac("sarasavic", "sarasara", "Sara", "Savic", TipPola.ZENSKI, LocalDate.of(1999, 12, 10), 52, tipKupca);
         kupacRepository.save(kupacSara);
-        Kupac kupacJovan = new Kupac("jovanmaric", "jasamkralj", "Jovan" , "Maric", TipPola.ZENSKI, LocalDate.of(1989, 11 , 05), 28, tipKupca);
+        Kupac kupacJovan = new Kupac("jovanmaric", "jasamkralj", "Jovan", "Maric", TipPola.ZENSKI, LocalDate.of(1989, 11, 05), 28, tipKupca);
         kupacRepository.save(kupacJovan);
-        Kupac kupacAnja = new Kupac("anjamilosevic", "anjamanjam", "Anja" , "Milosevic", TipPola.ZENSKI, LocalDate.of(1978, 05 , 10), 24, tipKupca);
+        Kupac kupacAnja = new Kupac("anjamilosevic", "anjamanjam", "Anja", "Milosevic", TipPola.ZENSKI, LocalDate.of(1978, 05, 10), 24, tipKupca);
         kupacRepository.save(kupacAnja);
 
-        Lokacija lokacijaSrpskaSicilija = new Lokacija(60 , 22, "Veselina Maslese 54A");
+        Lokacija lokacijaSrpskaSicilija = new Lokacija(60, 22, "Veselina Maslese 54A");
         lokacijaRepository.save(lokacijaSrpskaSicilija);
-        Lokacija lokacijaMorskiRaj = new Lokacija(25 , 89, "Kace Dejanovic 42");
+        Lokacija lokacijaMorskiRaj = new Lokacija(25, 89, "Kace Dejanovic 42");
         lokacijaRepository.save(lokacijaMorskiRaj);
+        Lokacija restorana3 = new Lokacija(32.14, 44.94, "Kralja petra 88");
+        lokacijaRepository.save(restorana3);
 
         Set<Artikal> jelovnikSrpskaSicilija = new HashSet<>();
         jelovnikSrpskaSicilija.add(pizza);
@@ -82,25 +86,32 @@ public class DatabaseConfiguration {
         Set<Artikal> jelovnikMorskiRaj = new HashSet<>();
         jelovnikMorskiRaj.add(pastrmka);
 
+        Set<Artikal> jelovnikNNNNNZ = new HashSet<>();
+        jelovnikNNNNNZ.add(sendvic_sa_sirom);
+
         Restoran restoranSrpskaSicilija = new Restoran("Srpska Sicilija", "italijanski", lokacijaSrpskaSicilija);
         restoranSrpskaSicilija.setJelovnik(jelovnikSrpskaSicilija);
         restoranRepository.save(restoranSrpskaSicilija);
         Restoran restoranMorskiRaj = new Restoran("Morski raj", "mediteranski", lokacijaMorskiRaj);
         restoranMorskiRaj.setJelovnik(jelovnikMorskiRaj);
         restoranRepository.save(restoranMorskiRaj);
+        Restoran niNaNebuNiNaZemlji = new Restoran("Ni na nebu ni na zemlji", "mediteranski", restorana3);
+        niNaNebuNiNaZemlji.setJelovnik(jelovnikNNNNNZ);
+        restoranRepository.save(niNaNebuNiNaZemlji);
 
         Menadzer menadzerAna = new Menadzer("anaparovic", "anabanana", "Ana", "Parovic", TipPola.ZENSKI, LocalDate.of(2001, 12, 13), restoranSrpskaSicilija);
         menadzerRepository.save(menadzerAna);
         Menadzer menadzerLuka = new Menadzer("lukastajic", "lukaluka", "Luka", "Stajic", TipPola.MUSKI, LocalDate.of(2001, 07, 07), restoranMorskiRaj);
         menadzerRepository.save(menadzerLuka);
 
-        Komentar komentar = new Komentar(kupacSara,restoranMorskiRaj, "Prelepa hrana, prelepa usluga, uzivam da dolazim sa porodicom", 5);
+        Komentar komentar = new Komentar(kupacSara, restoranMorskiRaj, "Prelepa hrana, prelepa usluga, uzivam da dolazim sa porodicom", 5);
         komentarRepository.save(komentar);
 
-        Porudzbina porudzbina = new Porudzbina(UUID.randomUUID(), jelovnikSrpskaSicilija, restoranSrpskaSicilija, LocalDateTime.now(), 510, kupacJovan, Status.U_PRIPREMI);
-        porudzbinaRepository.save(porudzbina);
+        Porudzbina porudzbina1 = new Porudzbina(UUID.randomUUID(), jelovnikSrpskaSicilija, restoranSrpskaSicilija, LocalDateTime.now(), 510, kupacJovan, Status.U_PRIPREMI);
+        porudzbinaRepository.save(porudzbina1);
 
-        Admin admin = new Admin("anicadjukic", "jasamasistent", "Anica", "Djokic", TipPola.ZENSKI, LocalDate.of(1999,05,11));
+
+        Admin admin = new Admin("anicadjukic", "jasamasistent", "Anica", "Djokic", TipPola.ZENSKI, LocalDate.of(1999, 05, 11));
         adminRepository.save(admin);
         return true;
     }
