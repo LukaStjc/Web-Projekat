@@ -7,9 +7,7 @@ import SistemZaNarucivanjeHrane.demo.service.PorudzbinaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -96,7 +94,8 @@ public class PorudzbinaRestController {
         return new ResponseEntity("TMP", HttpStatus.OK);    // dodao sam za sada da bih mogao da proverim program, inace kad se zavrsi ova funkcionalnost, izbrisacu
     }
 
-    @GetMapping("porudzbine_na_cekanju")    // ovu funkcionalnost ne mogu trenutno proveriti da li radi jer nisam iskucao kreiranje porudzbine kod korisnika
+    @GetMapping("porudzbine_na_cekanju")
+    // ovu funkcionalnost ne mogu trenutno proveriti da li radi jer nisam iskucao kreiranje porudzbine kod korisnika
     public ResponseEntity<List<PorudzbinaDto>> getPorudzbineNaCekanju(HttpSession session) {
         Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
 
@@ -123,5 +122,17 @@ public class PorudzbinaRestController {
         } else {
             return ResponseEntity.ok(porudzbineDto);
         }
+    }
+
+    @PutMapping("poruci_artikal_iz_restorana/{id}") // id je za artikal
+    public ResponseEntity<String> dodajArtikalUPorudzbinu(@PathVariable(name = "id") Long id, HttpSession session) {
+        Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
+
+        if(ulogovaniKorisnik==null)
+            return new ResponseEntity<>("Niste ulogovani", HttpStatus.BAD_REQUEST);
+        if(ulogovaniKorisnik.getTipUloge()!=TipUloge.KUPAC)
+            return new ResponseEntity<>("Ova funkcionalnost je dozvoljena samo kupcima", HttpStatus.BAD_REQUEST);
+
+
     }
 }
