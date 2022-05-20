@@ -13,13 +13,13 @@ import java.util.Set;
 @Entity
 public class Kupac extends Korisnik implements Serializable {
 
-    @OneToMany(mappedBy = "kupac", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "kupac", fetch = FetchType.EAGER) // mora eager
     @JsonIgnore// bidirektna
     private Set<Porudzbina> porudzbine = new HashSet<>();
 
     private int brojBodova;
 
-    //@JoinColumn(name = "tipKupca_rang") u tabeli treba nekako dodati da pise rang jer ne moze da pise klasa
+    //TODO @JoinColumn(name = "tipKupca_rang") u tabeli treba nekako dodati da pise rang jer ne moze da pise klasa
     private TipKupca tipKupca;
 
     public Kupac() {

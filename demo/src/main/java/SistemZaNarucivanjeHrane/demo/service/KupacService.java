@@ -1,6 +1,7 @@
 package SistemZaNarucivanjeHrane.demo.service;
 
 import SistemZaNarucivanjeHrane.demo.model.Kupac;
+import SistemZaNarucivanjeHrane.demo.model.Porudzbina;
 import SistemZaNarucivanjeHrane.demo.model.TipKupca;
 import SistemZaNarucivanjeHrane.demo.model.TipPola;
 import SistemZaNarucivanjeHrane.demo.repository.KupacRepository;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class KupacService {

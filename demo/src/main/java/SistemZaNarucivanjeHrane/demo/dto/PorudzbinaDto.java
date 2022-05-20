@@ -8,19 +8,19 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class PorudzbinaDto {
-    private Set<Artikal> poruceniArtikli = new HashSet<>();
+    private Set<ArtikalDto> poruceniArtikli = new HashSet<>();
     private LocalDateTime datumIVreme;
     private double cena;
     private Status status;
 
-    public PorudzbinaDto(Set<Artikal> poruceniArtikli, LocalDateTime datumIVreme, double cena, Status status) {
+    public PorudzbinaDto(Set<ArtikalDto> poruceniArtikli, LocalDateTime datumIVreme, double cena, Status status) {
         this.poruceniArtikli = poruceniArtikli;
         this.datumIVreme = datumIVreme;
         this.cena = cena;
         this.status = status;
     }
 
-    public Set<Artikal> getPoruceniArtikli() {
+    public Set<ArtikalDto> getPoruceniArtikli() {
         return poruceniArtikli;
     }
 

@@ -12,7 +12,7 @@ import java.util.Set;
 @Entity
 public class Dostavljac extends Korisnik implements Serializable {
 
-    @OneToMany(fetch = FetchType.LAZY) // unidirektno
+    @OneToMany(fetch = FetchType.EAGER) // unidirektno
     @JoinColumn(name="porudzbina_id")
     private Set<Porudzbina> porudzbine = new HashSet<>();
 

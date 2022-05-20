@@ -17,14 +17,14 @@ public class Porudzbina implements Serializable {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID ID; //ova anotacija sluzi tome da se generise veliki string brojeva, koji je naravno jedinstven
 
-    @ManyToMany(fetch = FetchType.LAZY) //undirektno
+    @ManyToMany(fetch = FetchType.EAGER) //undirektno, mora eager jer ne radi sa lazy
     @JoinTable(name = "poruceno",
             joinColumns = { @JoinColumn(name = "porudzbina_id", referencedColumnName = "id") },
             inverseJoinColumns = { @JoinColumn(name = "artikal_id", referencedColumnName = "id") }
     )
     private Set<Artikal> poruceniArtikli = new HashSet<>();
 
-    @ManyToOne(fetch = FetchType.LAZY) //undirektna
+    @ManyToOne(fetch = FetchType.EAGER) //undirektna
     @JoinColumn(name = "restoran_id")
     private Restoran restoran;
 
