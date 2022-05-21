@@ -107,7 +107,7 @@ public class DatabaseConfiguration {
         Komentar komentar = new Komentar(kupacSara, restoranMorskiRaj, "Prelepa hrana, prelepa usluga, uzivam da dolazim sa porodicom", 5);
         komentarRepository.save(komentar);
 
-        Porudzbina porudzbina1 = new Porudzbina(UUID.randomUUID(), jelovnikSrpskaSicilija, restoranSrpskaSicilija, LocalDateTime.now(), 510, kupacJovan, Status.U_PRIPREMI);
+        Porudzbina porudzbina1 = new Porudzbina(jelovnikSrpskaSicilija, restoranSrpskaSicilija, LocalDateTime.now(), 510, kupacJovan, Status.U_PRIPREMI);
         porudzbinaRepository.save(porudzbina1);
 
 

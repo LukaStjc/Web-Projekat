@@ -19,8 +19,8 @@ public class Porudzbina implements Serializable {
 
     @ManyToMany(fetch = FetchType.EAGER) //undirektno, mora eager jer ne radi sa lazy
     @JoinTable(name = "poruceno",
-            joinColumns = { @JoinColumn(name = "porudzbina_id", referencedColumnName = "id") },
-            inverseJoinColumns = { @JoinColumn(name = "artikal_id", referencedColumnName = "id") }
+            joinColumns = {@JoinColumn(name = "porudzbina_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "artikal_id", referencedColumnName = "id")}
     )
     private Set<Artikal> poruceniArtikli = new HashSet<>();
 
@@ -36,13 +36,12 @@ public class Porudzbina implements Serializable {
     private Kupac kupac;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Status status = Status.OBRADA;
 
     public Porudzbina() {
     }
 
-    public Porudzbina(UUID ID, Set<Artikal> poruceniArtikli, Restoran restoran, LocalDateTime datumIVreme, double cena, Kupac kupac, Status status) {
-        this.ID = ID;
+    public Porudzbina(Set<Artikal> poruceniArtikli, Restoran restoran, LocalDateTime datumIVreme, double cena, Kupac kupac, Status status) {
         this.poruceniArtikli = poruceniArtikli;
         this.restoran = restoran;
         this.datumIVreme = datumIVreme;
@@ -51,29 +50,53 @@ public class Porudzbina implements Serializable {
         this.status = status;
     }
 
-    public UUID getID() { return ID; }
+    public UUID getID() {
+        return ID;
+    }
 
-    public Set<Artikal> getPoruceniArtikli() { return poruceniArtikli; }
+    public Set<Artikal> getPoruceniArtikli() {
+        return poruceniArtikli;
+    }
 
-    public Restoran getRestoran() { return restoran; }
+    public Restoran getRestoran() {
+        return restoran;
+    }
 
-    public void setRestoran(Restoran restoran) { this.restoran = restoran; }
+    public void setRestoran(Restoran restoran) {
+        this.restoran = restoran;
+    }
 
-    public LocalDateTime getDatumIVreme() { return datumIVreme; }
+    public LocalDateTime getDatumIVreme() {
+        return datumIVreme;
+    }
 
-    public void setDatumIVreme(LocalDateTime datumIVreme) { this.datumIVreme = datumIVreme; }
+    public void setDatumIVreme(LocalDateTime datumIVreme) {
+        this.datumIVreme = datumIVreme;
+    }
 
-    public double getCena() { return cena; }
+    public double getCena() {
+        return cena;
+    }
 
-    public void setCena(double cena) { this.cena = cena; }
+    public void setCena(double cena) {
+        this.cena = cena;
+    }
 
-    public Status getStatus() { return status; }
+    public Status getStatus() {
+        return status;
+    }
 
-    public void setStatus(Status status) { this.status = status; }
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
-    public Kupac getKupac() { return kupac; }
+    public Kupac getKupac() {
+        return kupac;
+    }
 
-    public void setKupac(Kupac kupac) { this.kupac = kupac; }
+    public void setKupac(Kupac kupac) {
+        this.kupac = kupac;
+    }
 
     @Override
     public String toString() {

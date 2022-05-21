@@ -33,16 +33,12 @@ public class RestoranService {
         return restoranRepository.findByNaziv(naziv);
     }
 
-    public Restoran findByTip(String tip) {
-        return restoranRepository.findByTip(tip);
-    }
-
-    public Restoran findRestoranById(Long id){
+    public Restoran findRestoranById(Long id) {
         List<Restoran> restorani = new ArrayList<>();
-        restorani= restoranRepository.findAll();
+        restorani = restoranRepository.findAll();
 
-        for(Restoran r:restorani){
-            if(r.getID().equals(id)){
+        for (Restoran r : restorani) {
+            if (r.getID().equals(id)) {
                 return r;
             }
         }
@@ -54,26 +50,42 @@ public class RestoranService {
         return restoranRepository.findAll();
     }
 
-    public Restoran save(Restoran restoran) { return restoranRepository.save(restoran); }
+    public Restoran save(Restoran restoran) {
+        return restoranRepository.save(restoran);
+    }
 
-    public Menadzer findMenadzerByKorisnickoIme(String korisnickoIme) { return menadzerService.findByKorisnickoIme(korisnickoIme); }
+    public Menadzer findMenadzerByKorisnickoIme(String korisnickoIme) {
+        return menadzerService.findByKorisnickoIme(korisnickoIme);
+    }
 
     public Lokacija saveLokacija(Lokacija lokacija) {
         return lokacijaService.save(lokacija);
     }
 
-    public Menadzer saveMenadzer(Menadzer menadzer) { return menadzerService.save(menadzer); }
+    public Menadzer saveMenadzer(Menadzer menadzer) {
+        return menadzerService.save(menadzer);
+    }
 
-    public void saveArtikal(Artikal artikal){
+    public void saveArtikal(Artikal artikal) {
         artikalService.save(artikal);
     }
 
-    public List<Komentar> findAllKomentari(){
+    public List<Komentar> findAllKomentari() {
         return komentarService.findAll();
     }
 
-    public void deleteArtikal(Artikal artikal){
+    public void deleteArtikal(Artikal artikal) {
         artikalService.delete(artikal);
     }
 
+    public boolean isArtikalURestoranu(Long id1, Long id2) { // id1 za artikal, 2 za restoran
+        Restoran restoran = findRestoranById(id2);
+
+        for (Artikal a : restoran.getJelovnik()) {
+            if(a.getID().equals(id1)){
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -35,4 +35,8 @@ public class KupacService {
     public Kupac findByKorisnickoIme(String korisnickoIme) {
         return kupacRepository.findByKorisnickoIme(korisnickoIme);
     }
+
+    public void save(Kupac kupac){
+        kupacRepository.save(kupac);
+    }
 }
