@@ -36,11 +36,10 @@ public class PorudzbinaRestController {
 
         if (ulogovaniKorisnik.getTipUloge() == TipUloge.MENADZER) {
             Menadzer ulogovaniMenadzer = (Menadzer) ulogovaniKorisnik;
-            Restoran restoran = ulogovaniMenadzer.getRestoran();
 
             porudzbine = porudzbinaService.findAll();
             for (Porudzbina p : porudzbine) {
-                if (p.getRestoran().getID().equals(restoran.getID())) {   // ako je ta porudzbina vezana za restoran menadzera
+                if (p.getRestoran().getID().equals(ulogovaniMenadzer.getRestoran().getID())) {   // ako je ta porudzbina vezana za restoran menadzera
                     for (Artikal a : p.getPoruceniArtikli()) {
                         ArtikalDto tmp1 = new ArtikalDto(a.getNaziv(), a.getCena(), a.getTip(), a.getKolicina(), a.getOpis());
                         artikliDto.add(tmp1);
@@ -126,6 +125,10 @@ public class PorudzbinaRestController {
     }
 
     @PostMapping("poruci_artikal_iz_restorana/{id1}/{id2}") // id1 je za artikal, a id2 za restoran
+    /*Znaci ne mogu skontati u cemu je fora. Posmatrajmo kupca koji jos nema ni jednu porudzbinu
+     i sad on poruci picu iz restorana1, to ce mu pisati da ima u listi porudzvina, ALI, ako posle toga
+     dodam i sendvic iz restorana2, onda ce on imati 2 porudzbine, i u obema ce imati porucene artikle
+     picu i senvic.......................*/
     public ResponseEntity<String> dodajArtikalUPorudzbinu(@PathVariable(name = "id1") Long id1, @PathVariable(name = "id2") Long id2, HttpSession session) {
         Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
 
@@ -134,9 +137,11 @@ public class PorudzbinaRestController {
         if (ulogovaniKorisnik.getTipUloge() != TipUloge.KUPAC)
             return new ResponseEntity<>("Ova funkcionalnost je dozvoljena samo kupcima", HttpStatus.BAD_REQUEST);
 
-        if(!porudzbinaService.isArtikalURestoranu(id1, id2)){
+        Artikal tmp = porudzbinaService.findArtikalById(id1);
+        if(tmp==null)
+            return new ResponseEntity<>("Nije pronadjen taj artikal", HttpStatus.NOT_FOUND);
+        if(!porudzbinaService.isArtikalURestoranu(id1, id2))
             return new ResponseEntity<>("Taj restoran nema izabrani artikal u ponudi", HttpStatus.NOT_FOUND);
-        }
 
         Kupac ulogovaniKupac = (Kupac) ulogovaniKorisnik;
         Set<Porudzbina> uKPorudzbine = ulogovaniKupac.getPorudzbine();
@@ -144,18 +149,16 @@ public class PorudzbinaRestController {
         boolean novaPorudzbina = false;
         while (true) {
             if (uKPorudzbine.isEmpty() || novaPorudzbina) { // ako kupac trenutno nema porudzbine, moram da dodam porudzbinu
-                Artikal tmp = porudzbinaService.findArtikalById(id1);
-                if(tmp==null){
-                    return new ResponseEntity<>("Nije pronadjen taj artikal", HttpStatus.NOT_FOUND);
-                }
 
                 Set<Artikal> poruceniArtikli = new HashSet<>();
                 poruceniArtikli.add(tmp);
 
                 Porudzbina nova = new Porudzbina(poruceniArtikli, porudzbinaService.findRestoranById(id2), LocalDateTime.now(), tmp.getCena(), ulogovaniKupac, Status.OBRADA);
                 uKPorudzbine.add(nova);
-                porudzbinaService.saveKupac(ulogovaniKupac);
-
+                //porudzbinaService.saveArtikal(tmp);
+                //porudzbinaService.save(nova);
+                //porudzbinaService.saveKupac(ulogovaniKupac);
+                System.out.println("if");
                 return new ResponseEntity<>("Uspesno dodat artikal u porudzbinu", HttpStatus.OK);
             }
 
@@ -164,14 +167,15 @@ public class PorudzbinaRestController {
         se prebaci na drugu porudzbinu, vezanu za drugi restoran, a onda ne smem upisati artikal u prethodnu porudzbinu, nego u novu
          */
             for (Porudzbina p : uKPorudzbine) {
+                System.out.println("spoljasnji for");
                 if (p.getStatus() == Status.OBRADA && p.getRestoran().getID().equals(id2)) {
-                    Artikal tmp = porudzbinaService.findArtikalById(id1);
-                    if(tmp==null){
-                        return new ResponseEntity<>("Nije pronadjen taj artikal", HttpStatus.NOT_FOUND);
-                    }
-
+                    System.out.println("unutrasnji for");
                     p.getPoruceniArtikli().add(tmp);
-                    porudzbinaService.saveKupac(ulogovaniKupac);
+                    p.setCena(p.getCena()+tmp.getCena());
+                    //porudzbinaService.saveArtikal(tmp);
+                    //porudzbinaService.save(p);
+                    //porudzbinaService.saveKupac(ulogovaniKupac);
+                    return new ResponseEntity<>("Uspesno dodat artikal u porudzbinu", HttpStatus.OK);
                 }
             }
             novaPorudzbina = true;

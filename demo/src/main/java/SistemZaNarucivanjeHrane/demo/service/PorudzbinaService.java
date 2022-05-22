@@ -43,4 +43,12 @@ public class PorudzbinaService {
     public boolean isArtikalURestoranu(Long id1, Long id2){
         return restoranService.isArtikalURestoranu(id1, id2);
     }
+
+    public void save(Porudzbina porudzbina){
+        porudzbinaRepository.save(porudzbina);
+    }
+
+    public void saveArtikal(Artikal artikal){
+        artikalService.save(artikal);
+    }
 }
