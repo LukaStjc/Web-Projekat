@@ -51,4 +51,9 @@ public class PorudzbinaService {
     public void saveArtikal(Artikal artikal){
         artikalService.save(artikal);
     }
+
+    public Restoran findRestoranByNaziv(String naziv) { return restoranService.findByNaziv(naziv); }
+
+    public Artikal findArtikalByNaziv(String naziv) { return artikalService.findByNaziv(naziv); }
+
 }

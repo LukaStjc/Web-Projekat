@@ -34,4 +34,6 @@ public class ArtikalService {
         }
         return null;
     }
+
+    public Artikal findByNaziv(String naziv) { return artikalRepository.findByNaziv(naziv); }
 }
