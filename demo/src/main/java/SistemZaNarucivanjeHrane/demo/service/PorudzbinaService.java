@@ -22,6 +22,9 @@ public class PorudzbinaService {
     @Autowired
     private KupacService kupacService;
 
+    @Autowired
+    private PorucenArtikalService porucenArtikalService;
+
     public List<Porudzbina> findAll() {
         return porudzbinaRepository.findAll();
     }
@@ -34,6 +37,10 @@ public class PorudzbinaService {
 
     public Artikal findArtikalById(Long id){
         return artikalService.findArtikalById(id);
+    }
+
+    public void savePorucenArtikal(PorucenArtikal porucenArtikal){
+        porucenArtikalService.save(porucenArtikal);
     }
 
     public Restoran findRestoranById(Long id){

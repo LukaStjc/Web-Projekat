@@ -15,36 +15,31 @@ public class Porudzbina implements Serializable {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    private UUID ID; //ova anotacija sluzi tome da se generise veliki string brojeva, koji je naravno jedinstven
+    private UUID ID; //ova anotacija sluzi tome da se generise dugacak string brojeva, koji je naravno jedinstven
 
-    @ManyToMany(fetch = FetchType.EAGER) //undirektno, mora eager jer ne radi sa lazy
-    @JoinTable(name = "poruceno",
-            joinColumns = {@JoinColumn(name = "porudzbina_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "artikal_id", referencedColumnName = "id")}
-    )
-    private Set<Artikal> poruceniArtikli = new HashSet<>();
+    @OneToMany(fetch = FetchType.EAGER) //undirektno, mora eager jer ne radi sa lazy
+    private Set<PorucenArtikal> poruceniArtikli = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.EAGER) //undirektna
     @JoinColumn(name = "restoran_id")
     private Restoran restoran;
 
-    private LocalDateTime datumIVreme;
+    private final LocalDateTime datumIVreme = LocalDateTime.now();
 
-    private double cena;
+    private double cena = 0;
 
     @ManyToOne(fetch = FetchType.LAZY) //bidirektna, mappedBy ide u klasu Kupac, imamo JsonIgnore
     private Kupac kupac;
 
     @Enumerated(EnumType.STRING)
-    private Status status = Status.OBRADA;
+    private Status status = Status.U_KORPI;
 
     public Porudzbina() {
     }
 
-    public Porudzbina(Set<Artikal> poruceniArtikli, Restoran restoran, LocalDateTime datumIVreme, double cena, Kupac kupac, Status status) {
+    public Porudzbina(Set<PorucenArtikal> poruceniArtikli, Restoran restoran, double cena, Kupac kupac, Status status) {
         this.poruceniArtikli = poruceniArtikli;
         this.restoran = restoran;
-        this.datumIVreme = datumIVreme;
         this.cena = cena;
         this.kupac = kupac;
         this.status = status;
@@ -54,7 +49,7 @@ public class Porudzbina implements Serializable {
         return ID;
     }
 
-    public Set<Artikal> getPoruceniArtikli() {
+    public Set<PorucenArtikal> getPoruceniArtikli() {
         return poruceniArtikli;
     }
 
@@ -66,12 +61,12 @@ public class Porudzbina implements Serializable {
         this.restoran = restoran;
     }
 
-    public LocalDateTime getDatumIVreme() {
-        return datumIVreme;
+    public void setPoruceniArtikli(Set<PorucenArtikal> poruceniArtikli) {
+        this.poruceniArtikli = poruceniArtikli;
     }
 
-    public void setDatumIVreme(LocalDateTime datumIVreme) {
-        this.datumIVreme = datumIVreme;
+    public LocalDateTime getDatumIVreme() {
+        return datumIVreme;
     }
 
     public double getCena() {

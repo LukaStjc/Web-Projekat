@@ -1,7 +1,6 @@
 package SistemZaNarucivanjeHrane.demo.controller;
 
 import SistemZaNarucivanjeHrane.demo.dto.ArtikalDto;
-import SistemZaNarucivanjeHrane.demo.dto.PoruciArtikalDto;
 import SistemZaNarucivanjeHrane.demo.dto.PorudzbinaDto;
 import SistemZaNarucivanjeHrane.demo.model.*;
 import SistemZaNarucivanjeHrane.demo.service.PorudzbinaService;
@@ -11,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -42,9 +40,9 @@ public class PorudzbinaRestController {
             porudzbine = porudzbinaService.findAll();
             for (Porudzbina p : porudzbine) {
                 if (p.getRestoran().getID().equals(ulogovaniMenadzer.getRestoran().getID())) {   // ako je ta porudzbina vezana za restoran menadzera
-                    for (Artikal a : p.getPoruceniArtikli()) {
+                    for (PorucenArtikal a : p.getPoruceniArtikli()) {
                         //TODO staviti ovo new u zagradu da bude cistije
-                        ArtikalDto tmp1 = new ArtikalDto(a.getNaziv(), a.getCena(), a.getTip(), a.getKolicina(), a.getOpis());
+                        ArtikalDto tmp1 = new ArtikalDto(a.getArtikal().getNaziv(), a.getArtikal().getCena(), a.getArtikal().getTip(), a.getKolicina(), a.getArtikal().getOpis());
                         artikliDto.add(tmp1);
                     }
                     //TODO isto
@@ -52,52 +50,39 @@ public class PorudzbinaRestController {
                     porudzbineDto.add(tmp2);
                 }
             }
-
-            if (porudzbineDto.isEmpty()) {
-                //TODO dodati da ispise poruku
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            } else {
-                return ResponseEntity.ok(porudzbineDto);
-            }
-
         } else if (ulogovaniKorisnik.getTipUloge() == TipUloge.KUPAC) {
             Kupac ulogovaniKupac = (Kupac) ulogovaniKorisnik;
 
             for (Porudzbina p : ulogovaniKupac.getPorudzbine()) {
-                for (Artikal a : p.getPoruceniArtikli()) {
-                    ArtikalDto tmp = new ArtikalDto(a.getNaziv(), a.getCena(), a.getTip(), a.getKolicina(), a.getOpis());
+                for (PorucenArtikal a : p.getPoruceniArtikli()) {
+                    artikliDto.add(new ArtikalDto(a.getArtikal().getNaziv(), a.getArtikal().getCena(), a.getArtikal().getTip(), a.getKolicina(), a.getArtikal().getOpis()));
+                }
+
+                porudzbineDto.add(new PorudzbinaDto(artikliDto, p.getDatumIVreme(), p.getCena(), p.getStatus()));
+            }
+        } else if (ulogovaniKorisnik.getTipUloge() == TipUloge.DOSTAVLJAC) {    //TODO msm da nije zavrseno
+            Dostavljac ulogovaniDostavljac = (Dostavljac) ulogovaniKorisnik;
+
+            for (Porudzbina p : ulogovaniDostavljac.getPorudzbine()) {
+                for (PorucenArtikal a : p.getPoruceniArtikli()) {
+                    ArtikalDto tmp = new ArtikalDto(a.getArtikal().getNaziv(), a.getArtikal().getCena(), a.getArtikal().getTip(), a.getKolicina(), a.getArtikal().getOpis());
                     artikliDto.add(tmp);
                 }
                 PorudzbinaDto tmp = new PorudzbinaDto(artikliDto, p.getDatumIVreme(), p.getCena(), p.getStatus());
                 porudzbineDto.add(tmp);
             }
-
-            if (porudzbineDto.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            } else {
-                return ResponseEntity.ok(porudzbineDto);
-            }
-
-        } else if (ulogovaniKorisnik.getTipUloge() == TipUloge.DOSTAVLJAC) {    //TODO msm da nije zavrseno
-            Dostavljac ulogovaniDostavljac = (Dostavljac) ulogovaniKorisnik;
-
-            for (Porudzbina p : ulogovaniDostavljac.getPorudzbine()) {
-                    for (Artikal a : p.getPoruceniArtikli()) {
-                        ArtikalDto tmp = new ArtikalDto(a.getNaziv(), a.getCena(), a.getTip(), a.getKolicina(), a.getOpis());
-                        artikliDto.add(tmp);
-                    }
-                    PorudzbinaDto tmp = new PorudzbinaDto(artikliDto, p.getDatumIVreme(), p.getCena(), p.getStatus());
-                    porudzbineDto.add(tmp);
-            }
-
-            if (porudzbineDto.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            } else {
-                return ResponseEntity.ok(porudzbineDto);
-            }
         }
-        //ovo ce se desiti ako je ulogovan admin, tako da moze da kaze samo, ova funkcionalnost nije dozvoljena adminima
-        return new ResponseEntity("TMP", HttpStatus.OK);    // dodao sam za sada da bih mogao da proverim program, inace kad se zavrsi ova funkcionalnost, izbrisacu
+        else{
+            //ovo ce se desiti ako je ulogovan admin
+            return new ResponseEntity("Ova funkcionalnost nije dozvoljena adminima", HttpStatus.BAD_REQUEST);
+        }
+
+        if (porudzbineDto.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return ResponseEntity.ok(porudzbineDto);
+        }
+
     }
 
     @GetMapping("porudzbine_na_cekanju")
@@ -116,8 +101,8 @@ public class PorudzbinaRestController {
         Set<ArtikalDto> artikliDto = new HashSet<>();
 
         for (Porudzbina p : porudzbine) {
-            for (Artikal a : p.getPoruceniArtikli()) {
-                ArtikalDto tmp = new ArtikalDto(a.getNaziv(), a.getCena(), a.getTip(), a.getKolicina(), a.getOpis());
+            for (PorucenArtikal a : p.getPoruceniArtikli()) {
+                ArtikalDto tmp = new ArtikalDto(a.getArtikal().getNaziv(), a.getArtikal().getCena(), a.getArtikal().getTip(), a.getKolicina(), a.getArtikal().getOpis());
                 artikliDto.add(tmp);
             }
             PorudzbinaDto tmp = new PorudzbinaDto(artikliDto, p.getDatumIVreme(), p.getCena(), p.getStatus());
@@ -131,11 +116,7 @@ public class PorudzbinaRestController {
         }
     }
 
-   /* @PostMapping("poruci_artikal_iz_restorana/{id1}/{id2}") // id1 je za artikal, a id2 za restoran
-    Znaci ne mogu skontati u cemu je fora. Posmatrajmo kupca koji jos nema ni jednu porudzbinu
-     i sad on poruci picu iz restorana1, to ce mu pisati da ima u listi porudzvina, ALI, ako posle toga
-     dodam i sendvic iz restorana2, onda ce on imati 2 porudzbine, i u obema ce imati porucene artikle
-     picu i senvic.......................
+    @PostMapping("poruci_artikal_iz_restorana/{id1}/{id2}") // id1 je za artikal, a id2 za restoran
     public ResponseEntity<String> dodajArtikalUPorudzbinu(@PathVariable(name = "id1") Long id1, @PathVariable(name = "id2") Long id2, HttpSession session) {
         Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
 
@@ -144,99 +125,61 @@ public class PorudzbinaRestController {
         if (ulogovaniKorisnik.getTipUloge() != TipUloge.KUPAC)
             return new ResponseEntity<>("Ova funkcionalnost je dozvoljena samo kupcima", HttpStatus.BAD_REQUEST);
 
-        Artikal tmp = porudzbinaService.findArtikalById(id1);
-        if(tmp==null)
+        Artikal artikal = porudzbinaService.findArtikalById(id1);
+        if (artikal == null)
             return new ResponseEntity<>("Nije pronadjen taj artikal", HttpStatus.NOT_FOUND);
-        if(!porudzbinaService.isArtikalURestoranu(id1, id2))
+        if (!porudzbinaService.isArtikalURestoranu(id1, id2))
             return new ResponseEntity<>("Taj restoran nema izabrani artikal u ponudi", HttpStatus.NOT_FOUND);
 
         Kupac ulogovaniKupac = (Kupac) ulogovaniKorisnik;
         Set<Porudzbina> uKPorudzbine = ulogovaniKupac.getPorudzbine();
 
-        boolean novaPorudzbina = false;
-        while (true) {
-            if (uKPorudzbine.isEmpty() || novaPorudzbina) { // ako kupac trenutno nema porudzbine, moram da dodam porudzbinu
+        if(uKPorudzbine.isEmpty()){
 
-                Set<Artikal> poruceniArtikli = new HashSet<>();
-                poruceniArtikli.add(tmp);
+        }
 
-                Porudzbina nova = new Porudzbina(poruceniArtikli, porudzbinaService.findRestoranById(id2), LocalDateTime.now(), tmp.getCena(), ulogovaniKupac, Status.OBRADA);
-                uKPorudzbine.add(nova);
-                porudzbinaService.saveArtikal(tmp);
-                porudzbinaService.save(nova);
+        Porudzbina porudzbina = new Porudzbina();
+        for (Porudzbina p : uKPorudzbine) {
+            if (p.getStatus().equals(Status.U_KORPI)) {
+                porudzbina = p;
+                break;
+            }
+        }
+
+        // ovo radim ako je novokreirana porudzbina, i za nju se samo zna da je "u korpi", jos uvek se ne zna za restoran i kupca
+        if (porudzbina.getRestoran() == null)
+            porudzbina.setRestoran(porudzbinaService.findRestoranById(id2));
+        if (porudzbina.getKupac() == null)
+            porudzbina.setKupac(ulogovaniKupac);
+
+        for (PorucenArtikal pa : porudzbina.getPoruceniArtikli()) {    // proveravam da li vec postoji taj artikal u porudzbini, ako da, povecavam kolicinu
+            if (pa.getArtikal().getID().equals(id1)) {
+                pa.setKolicina(pa.getKolicina() + 1);     // povecavam kolicinu
+                porudzbina.setCena(porudzbina.getCena() + artikal.getCena()); // povecavam cenu
+
+                porudzbinaService.savePorucenArtikal(pa);
+                porudzbinaService.save(porudzbina);
                 porudzbinaService.saveKupac(ulogovaniKupac);
 
-                return new ResponseEntity<>("Uspesno dodat artikal u porudzbinu", HttpStatus.OK);
+                return ResponseEntity.ok("Uspesno dodat artikal u porudzbinu");
             }
-
-        u ovom foru trazim onu porudzbinu koja je u stanju obrada jer to znaci da nije jos zavrsena i da na nju treba da se dodaju artikli
-        takodje, porudzbinu ciji je id restorana vezan za restoran koji je izabran, jer se moze desiti da kupac ne zavrsi porudzbinu, nego da
-        se prebaci na drugu porudzbinu, vezanu za drugi restoran, a onda ne smem upisati artikal u prethodnu porudzbinu, nego u novu
-
-            for (Porudzbina p : uKPorudzbine) {
-                System.out.println("spoljasnji for");
-                if (p.getStatus() == Status.OBRADA && p.getRestoran().getID().equals(id2)) {
-                    System.out.println("unutrasnji for");
-                    p.getPoruceniArtikli().add(tmp);
-                    p.setCena(p.getCena()+tmp.getCena());
-                    //porudzbinaService.saveArtikal(tmp);
-                    //porudzbinaService.save(p);
-                    //porudzbinaService.saveKupac(ulogovaniKupac);
-                    return new ResponseEntity<>("Uspesno dodat artikal u porudzbinu", HttpStatus.OK);
-                }
-            }
-            novaPorudzbina = true;
         }
-    }*/
 
-   @PostMapping("poruci_artikal_iz_restorana") //mozemo dodati /restoran/artikal
-    public ResponseEntity<Set<Porudzbina>> dodajArtikalUPorudzbinu(@RequestBody PoruciArtikalDto poruciArtikalDto, HttpSession session) {
-       Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
+        PorucenArtikal porucenArtikal = new PorucenArtikal(artikal, 1);
+        porudzbina.getPoruceniArtikli().add(porucenArtikal);
+        porudzbina.setCena(porudzbina.getCena() + artikal.getCena());
 
-       if (ulogovaniKorisnik == null)
-           return new ResponseEntity("Niste ulogovani", HttpStatus.BAD_REQUEST);
-       if (ulogovaniKorisnik.getTipUloge() != TipUloge.KUPAC)
-           return new ResponseEntity("Ova funkcionalnost je dozvoljena samo kupcima", HttpStatus.BAD_REQUEST);
+        porudzbinaService.savePorucenArtikal(porucenArtikal);
+        porudzbinaService.save(porudzbina);
+        porudzbinaService.saveKupac(ulogovaniKupac);
 
-       if (porudzbinaService.findRestoranByNaziv(poruciArtikalDto.nazivRestorana) == null)
-           return new ResponseEntity("Uneti restoran ne postoji", HttpStatus.BAD_REQUEST);
+        return ResponseEntity.ok("Uspesno dodat artikal u porudzbinu");
+    }
 
-       if (porudzbinaService.findArtikalByNaziv(poruciArtikalDto.nazivArtikla) == null)
-           return new ResponseEntity("Uneti artikal ne postoji", HttpStatus.BAD_REQUEST);
-
-       if(!porudzbinaService.findRestoranByNaziv(poruciArtikalDto.nazivRestorana).getJelovnik().contains(porudzbinaService.findArtikalByNaziv(poruciArtikalDto.nazivArtikla)))
-           return new ResponseEntity("Uneti restoran nema izabrani artikal u ponudi", HttpStatus.NOT_FOUND);
-
-       Kupac ulogovaniKupac = (Kupac) ulogovaniKorisnik;
-       //mozda da promenimo u kupcu da bude array list
-       Set<Porudzbina> porudzbine = ulogovaniKupac.getPorudzbine();
-       Artikal artikal = porudzbinaService.findArtikalByNaziv(poruciArtikalDto.nazivArtikla);
-       Boolean nasao = false;
-
-       for(Porudzbina porudzbina : porudzbine) {
-           if(porudzbina.getRestoran().getNaziv() == poruciArtikalDto.nazivRestorana && porudzbina.getStatus() == Status.OBRADA) {
-               porudzbina.getPoruceniArtikli().add(artikal);
-               porudzbinaService.save(porudzbina);
-               ulogovaniKupac.getPorudzbine().add(porudzbina);
-               porudzbinaService.saveKupac(ulogovaniKupac);
-               nasao = true;
-               break;
-           }
-       }
-
-       if(!nasao) {
-           Set<Artikal> poruceniArtikli = new HashSet<>();
-           poruceniArtikli.add(artikal);
-           Porudzbina porudzbina = new Porudzbina(poruceniArtikli, porudzbinaService.findRestoranByNaziv(poruciArtikalDto.nazivRestorana), LocalDateTime.now(), porudzbinaService.findArtikalByNaziv(poruciArtikalDto.nazivArtikla).getCena(), ulogovaniKupac, Status.OBRADA);
-           porudzbinaService.save(porudzbina);
-           ulogovaniKupac.getPorudzbine().add(porudzbina);
-           porudzbinaService.saveKupac(ulogovaniKupac);
-       }
-
-       return ResponseEntity.ok((ulogovaniKupac.getPorudzbine()));
-
-   }
+    @PostMapping("submit_korpe")
+    public ResponseEntity<String> zavrsiSaKorpom(HttpSession session) {
 
 
-
+        return ResponseEntity.ok("cao");
+    }
 }

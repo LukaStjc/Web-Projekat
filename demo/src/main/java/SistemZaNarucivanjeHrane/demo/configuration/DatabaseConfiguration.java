@@ -66,10 +66,15 @@ public class DatabaseConfiguration {
         TipKupca tipKupca = new TipKupca("zlatni", 0.3, 33); //Lupila sam koji su podaci za tip kupca, to treba smisliti lepo
 
         Kupac kupacSara = new Kupac("sarasavic", "sarasara", "Sara", "Savic", TipPola.ZENSKI, LocalDate.of(1999, 12, 10), 52, tipKupca);
+        Porudzbina porudzbina = new Porudzbina();
+        kupacSara.getPorudzbine().add(porudzbina);
+        porudzbinaRepository.save(porudzbina);
         kupacRepository.save(kupacSara);
         Kupac kupacJovan = new Kupac("jovanmaric", "jasamkralj", "Jovan", "Maric", TipPola.ZENSKI, LocalDate.of(1989, 11, 05), 28, tipKupca);
+        kupacSara.getPorudzbine().add(porudzbina);
         kupacRepository.save(kupacJovan);
         Kupac kupacAnja = new Kupac("anjamilosevic", "anjamanjam", "Anja", "Milosevic", TipPola.ZENSKI, LocalDate.of(1978, 05, 10), 24, tipKupca);
+        kupacSara.getPorudzbine().add(porudzbina);
         kupacRepository.save(kupacAnja);
 
         Lokacija lokacijaSrpskaSicilija = new Lokacija(60, 22, "Veselina Maslese 54A");
@@ -107,8 +112,8 @@ public class DatabaseConfiguration {
         Komentar komentar = new Komentar(kupacSara, restoranMorskiRaj, "Prelepa hrana, prelepa usluga, uzivam da dolazim sa porodicom", 5);
         komentarRepository.save(komentar);
 
-        Porudzbina porudzbina1 = new Porudzbina(jelovnikSrpskaSicilija, restoranSrpskaSicilija, LocalDateTime.now(), 510, kupacJovan, Status.U_PRIPREMI);
-        porudzbinaRepository.save(porudzbina1);
+        //Porudzbina porudzbina1 = new Porudzbina(jelovnikSrpskaSicilija, restoranSrpskaSicilija, 510, kupacJovan, Status.U_PRIPREMI);
+        //porudzbinaRepository.save(porudzbina1);
 
 
         Admin admin = new Admin("anicadjukic", "jasamasistent", "Anica", "Djokic", TipPola.ZENSKI, LocalDate.of(1999, 05, 11));
