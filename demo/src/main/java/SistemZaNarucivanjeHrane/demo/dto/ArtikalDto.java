@@ -36,4 +36,15 @@ public class ArtikalDto {
     public String getOpis() {
         return opis;
     }
+
+    @Override
+    public String toString() {
+        return "Artikal: {" +
+                "naziv ='" + naziv + '\'' +
+                ", cena =" + cena +
+                ", tip =" + tip +
+                ", kolicina =" + kolicina +
+                ", opis ='" + opis + '\'' +
+                '}';
+    }
 }

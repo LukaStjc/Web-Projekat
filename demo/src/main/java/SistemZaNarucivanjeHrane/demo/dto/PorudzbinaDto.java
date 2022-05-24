@@ -1,6 +1,5 @@
 package SistemZaNarucivanjeHrane.demo.dto;
 
-import SistemZaNarucivanjeHrane.demo.model.Artikal;
 import SistemZaNarucivanjeHrane.demo.model.Status;
 
 import java.time.LocalDateTime;
@@ -8,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class PorudzbinaDto {
+
     private Set<ArtikalDto> poruceniArtikli = new HashSet<>();
     private LocalDateTime datumIVreme;
     private double cena;
@@ -46,5 +46,15 @@ public class PorudzbinaDto {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "Porudzbina: {" +
+                "poruceniArtikli =" + poruceniArtikli +
+                ", datumIVreme =" + datumIVreme +
+                ", cena =" + cena +
+                ", status =" + status +
+                '}';
     }
 }

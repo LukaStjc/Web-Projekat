@@ -7,10 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 @Configuration
 public class DatabaseConfiguration {
@@ -45,6 +43,9 @@ public class DatabaseConfiguration {
     @Autowired
     private TipKupcaRepository tipKupcaRepository;
 
+    @Autowired
+    private PorucenArtikalRepository porucenArtikalRepository;
+
     @Bean
     public boolean instantiate() {
         Artikal pastrmka = new Artikal("Pastrmka sa krompir salatom", 649, TipArtikla.JELO, 8, "Pastrmka sveze pecana sa Jadranskog mora");
@@ -63,20 +64,6 @@ public class DatabaseConfiguration {
         Dostavljac dostavljacIvana = new Dostavljac("ivanajovanovic", "ivanavolimarka", "Ivana", "Jovanovic", TipPola.ZENSKI, LocalDate.of(1995, 12, 03));
         dostavljacRepository.save(dostavljacIvana);
 
-        TipKupca tipKupca = new TipKupca("zlatni", 0.3, 33); //Lupila sam koji su podaci za tip kupca, to treba smisliti lepo
-
-        Kupac kupacSara = new Kupac("sarasavic", "sarasara", "Sara", "Savic", TipPola.ZENSKI, LocalDate.of(1999, 12, 10), 52, tipKupca);
-        Porudzbina porudzbina = new Porudzbina();
-        kupacSara.getPorudzbine().add(porudzbina);
-        porudzbinaRepository.save(porudzbina);
-        kupacRepository.save(kupacSara);
-        Kupac kupacJovan = new Kupac("jovanmaric", "jasamkralj", "Jovan", "Maric", TipPola.ZENSKI, LocalDate.of(1989, 11, 05), 28, tipKupca);
-        kupacSara.getPorudzbine().add(porudzbina);
-        kupacRepository.save(kupacJovan);
-        Kupac kupacAnja = new Kupac("anjamilosevic", "anjamanjam", "Anja", "Milosevic", TipPola.ZENSKI, LocalDate.of(1978, 05, 10), 24, tipKupca);
-        kupacSara.getPorudzbine().add(porudzbina);
-        kupacRepository.save(kupacAnja);
-
         Lokacija lokacijaSrpskaSicilija = new Lokacija(60, 22, "Veselina Maslese 54A");
         lokacijaRepository.save(lokacijaSrpskaSicilija);
         Lokacija lokacijaMorskiRaj = new Lokacija(25, 89, "Kace Dejanovic 42");
@@ -87,10 +74,8 @@ public class DatabaseConfiguration {
         Set<Artikal> jelovnikSrpskaSicilija = new HashSet<>();
         jelovnikSrpskaSicilija.add(pizza);
         jelovnikSrpskaSicilija.add(pasta);
-
         Set<Artikal> jelovnikMorskiRaj = new HashSet<>();
         jelovnikMorskiRaj.add(pastrmka);
-
         Set<Artikal> jelovnikNNNNNZ = new HashSet<>();
         jelovnikNNNNNZ.add(sendvic_sa_sirom);
 
@@ -103,6 +88,39 @@ public class DatabaseConfiguration {
         Restoran niNaNebuNiNaZemlji = new Restoran("Ni na nebu ni na zemlji", "mediteranski", restorana3);
         niNaNebuNiNaZemlji.setJelovnik(jelovnikNNNNNZ);
         restoranRepository.save(niNaNebuNiNaZemlji);
+
+        PorucenArtikal porucenArtikal1 = new PorucenArtikal(pasta,1);
+        porucenArtikalRepository.save(porucenArtikal1);
+        PorucenArtikal porucenArtikal2 = new PorucenArtikal(pizza,1);
+        porucenArtikalRepository.save(porucenArtikal2);
+
+        Set<PorucenArtikal> porucenArtikals = new HashSet<>();
+        porucenArtikals.add(porucenArtikal1);
+        Porudzbina porudzbina = new Porudzbina(porucenArtikals, restoranSrpskaSicilija, 555, null, Status.U_PRIPREMI);
+        porudzbinaRepository.save(porudzbina);
+        Set<PorucenArtikal> porucenArtikals2 = new HashSet<>();
+        porucenArtikals.add(porucenArtikal2);
+        Porudzbina porudzbina2 = new Porudzbina(porucenArtikals2, restoranSrpskaSicilija, 300, null, Status.U_KORPI);
+        porudzbinaRepository.save(porudzbina2);
+
+        TipKupca tipKupca = new TipKupca("zlatni", 0.3, 33); //Lupila sam koji su podaci za tip kupca, to treba smisliti lepo
+
+        Kupac kupacSara = new Kupac("sarasavic", "sarasara", "Sara", "Savic", TipPola.ZENSKI, LocalDate.of(1999, 12, 10), 52, tipKupca);
+        kupacRepository.save(kupacSara);
+        Kupac kupacJovan = new Kupac("jovanmaric", "jasamkralj", "Jovan", "Maric", TipPola.ZENSKI, LocalDate.of(1989, 11, 05), 28, tipKupca);
+        kupacRepository.save(kupacJovan);
+        Kupac kupacAnja = new Kupac("anjamilosevic", "anjamanjam", "Anja", "Milosevic", TipPola.ZENSKI, LocalDate.of(1978, 05, 10), 24, tipKupca);
+        kupacRepository.save(kupacAnja);
+        porudzbina.setKupac(kupacAnja);
+        porudzbinaRepository.save(porudzbina);
+        porudzbina2.setKupac(kupacAnja);
+        porudzbinaRepository.save(porudzbina2);
+        kupacAnja.dodajPorudzbinu(porudzbina);
+        kupacAnja.dodajPorudzbinu(porudzbina2);
+        kupacRepository.save(kupacAnja);
+
+        //kupacRepository.save(kupacAnja);
+
 
         Menadzer menadzerAna = new Menadzer("anaparovic", "anabanana", "Ana", "Parovic", TipPola.ZENSKI, LocalDate.of(2001, 12, 13), restoranSrpskaSicilija);
         menadzerRepository.save(menadzerAna);

@@ -1,6 +1,7 @@
 package SistemZaNarucivanjeHrane.demo.model;
 
 import javax.persistence.*;
+import java.io.File;
 import java.io.Serializable;
 
 @Entity
@@ -21,6 +22,9 @@ public class Artikal implements Serializable {
     private double kolicina;
 
     private String opis;
+
+    @Column(nullable = true, length = 64)
+    private File slika;
 
     public Artikal() {
     }
@@ -54,4 +58,8 @@ public class Artikal implements Serializable {
     public String getOpis() { return opis; }
 
     public void setOpis(String opis) { this.opis = opis; }
+
+    public File getSlika() { return slika; }
+
+    public void setSlika(File slika) { this.slika = slika; }
 }

@@ -1,6 +1,5 @@
 package SistemZaNarucivanjeHrane.demo.model;
 
-import SistemZaNarucivanjeHrane.demo.service.PorucenArtikalService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.Entity;
@@ -33,10 +32,6 @@ public class Kupac extends Korisnik implements Serializable {
         this.brojBodova = brojBodova;
         this.tipKupca = tipKupca;
         super.setTipUloge(TipUloge.KUPAC);
-
-        Set<PorucenArtikal> porucenArtikals = new HashSet<>();
-        Porudzbina p = new Porudzbina(porucenArtikals, null, 0, this, Status.U_KORPI);
-        this.porudzbine.add(p);
     }
 
     public Set<Porudzbina> getPorudzbine() {
@@ -57,6 +52,10 @@ public class Kupac extends Korisnik implements Serializable {
 
     public void setTipKupca(TipKupca tipKupca) {
         this.tipKupca = tipKupca;
+    }
+
+    public void dodajPorudzbinu(Porudzbina porudzbina) {
+        this.porudzbine.add(porudzbina);
     }
 
     /*@Override

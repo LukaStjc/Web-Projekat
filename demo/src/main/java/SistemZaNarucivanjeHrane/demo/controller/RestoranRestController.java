@@ -1,24 +1,20 @@
 package SistemZaNarucivanjeHrane.demo.controller;
 
 import SistemZaNarucivanjeHrane.demo.dto.*;
-import SistemZaNarucivanjeHrane.demo.model.Restoran;
 import SistemZaNarucivanjeHrane.demo.model.*;
-import SistemZaNarucivanjeHrane.demo.service.ArtikalService;
-import SistemZaNarucivanjeHrane.demo.service.KomentarService;
-import SistemZaNarucivanjeHrane.demo.service.PorudzbinaService;
 import SistemZaNarucivanjeHrane.demo.service.RestoranService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RestController;
-
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/api/")
@@ -28,8 +24,11 @@ public class RestoranRestController {
     private RestoranService restoranService;
 
     //TODO dodati sliku kao parametar metode
+    @Value("${file.upload-dir}")
+    String FILE_DIRECTORY;
+
     @PostMapping("dodaj_artikal")
-    public ResponseEntity<String> addArtikal(@RequestBody ArtikalDto artikalDto, HttpSession session) {
+    public ResponseEntity<String> addArtikal(@RequestParam ArtikalSaSlikomDto artikalDto, HttpSession session) throws IOException {
         Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
 
         if (ulogovaniKorisnik == null)
@@ -37,8 +36,14 @@ public class RestoranRestController {
         if (ulogovaniKorisnik.getTipUloge() != TipUloge.MENADZER)
             return new ResponseEntity<>("Ova funkcionalnost je dostupna samo menadzerima", HttpStatus.BAD_REQUEST);
 
+        File myFile = new File(FILE_DIRECTORY+ artikalDto.getSlika().getOriginalFilename());
+        myFile.createNewFile();
+        FileOutputStream fos = new FileOutputStream(myFile);
+        fos.write(artikalDto.getSlika().getBytes());
         Artikal artikal = new Artikal(artikalDto.getNaziv(), artikalDto.getCena(), artikalDto.getTip(), artikalDto.getKolicina(), artikalDto.getOpis());
+        artikal.setSlika(myFile);
         restoranService.saveArtikal(artikal);
+        fos.close();
 
         Menadzer ulogovaniMenadzer = (Menadzer) ulogovaniKorisnik;
         Restoran restoran = ulogovaniMenadzer.getRestoran();

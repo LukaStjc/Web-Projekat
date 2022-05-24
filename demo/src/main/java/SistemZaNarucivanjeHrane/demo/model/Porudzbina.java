@@ -93,6 +93,10 @@ public class Porudzbina implements Serializable {
         this.kupac = kupac;
     }
 
+    public void dodajPoruceniArtikal(PorucenArtikal porucenArtikal) {
+        this.poruceniArtikli.add(porucenArtikal);
+    }
+
     @Override
     public String toString() {
         return "Porudzbina : " +
