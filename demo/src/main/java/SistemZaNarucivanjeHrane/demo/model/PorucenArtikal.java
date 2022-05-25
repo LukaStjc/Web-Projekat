@@ -40,4 +40,11 @@ public class PorucenArtikal implements Serializable {
         this.kolicina = kolicina;
     }
 
+    @Override
+    public String toString() {
+        return "PorucenArtikal: {" +
+                "artikal =" + artikal.getNaziv() +
+                ", kolicina =" + kolicina +
+                '}';
+    }
 }

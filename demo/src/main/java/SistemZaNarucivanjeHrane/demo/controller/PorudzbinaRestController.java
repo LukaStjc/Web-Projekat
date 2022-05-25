@@ -2,6 +2,7 @@ package SistemZaNarucivanjeHrane.demo.controller;
 
 import SistemZaNarucivanjeHrane.demo.dto.ArtikalDto;
 import SistemZaNarucivanjeHrane.demo.dto.PorudzbinaDto;
+import SistemZaNarucivanjeHrane.demo.dto.PorudzbineDto;
 import SistemZaNarucivanjeHrane.demo.model.*;
 import SistemZaNarucivanjeHrane.demo.service.PorudzbinaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class PorudzbinaRestController {
     private PorudzbinaService porudzbinaService;
 
     @GetMapping("porudzbine")
-    public ResponseEntity<List<PorudzbinaDto>> getPorudzbine(HttpSession session) {
+    public ResponseEntity<List<PorudzbineDto>> getPorudzbine(HttpSession session) {
         Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
 
         if (ulogovaniKorisnik == null)
@@ -31,51 +32,24 @@ public class PorudzbinaRestController {
 
         //TODO staviti i ovde new ArrayList<>() da se napravi objekat sa null da bude lepse
         List<Porudzbina> porudzbine = new ArrayList<>();
-        List<PorudzbinaDto> porudzbineDto = new ArrayList<>();
+        List<PorudzbineDto> porudzbineDto = new ArrayList<>();
         Set<ArtikalDto> artikliDto = new HashSet<>();
 
-        if (ulogovaniKorisnik.getTipUloge().equals(TipUloge.MENADZER)) {
-            Menadzer ulogovaniMenadzer = (Menadzer) ulogovaniKorisnik;
+       if (ulogovaniKorisnik.getTipUloge().equals(TipUloge.MENADZER)) {
+           Menadzer ulogovaniMenadzer = (Menadzer) ulogovaniKorisnik;
+           return ResponseEntity.ok(porudzbinaService.getPorudzbineFromMenadzer(ulogovaniMenadzer));
+       }
 
-            porudzbine = porudzbinaService.findAll();
-            for (Porudzbina p : porudzbine) {
-                if (p.getRestoran().getID().equals(ulogovaniMenadzer.getRestoran().getID())) {   // ako je ta porudzbina vezana za restoran menadzera
-                    for (PorucenArtikal a : p.getPoruceniArtikli()) {
-                        //TODO staviti ovo new u zagradu da bude cistije
-                        ArtikalDto tmp1 = new ArtikalDto(a.getArtikal().getNaziv(), a.getArtikal().getCena(), a.getArtikal().getTip(), a.getKolicina(), a.getArtikal().getOpis());
-                        artikliDto.add(tmp1);
-                    }
-                    //TODO isto
-                    PorudzbinaDto tmp2 = new PorudzbinaDto(artikliDto, p.getDatumIVreme(), p.getCena(), p.getStatus());
-                    porudzbineDto.add(tmp2);
-                }
-            }
-            return ResponseEntity.ok(porudzbineDto);
-        }
+
         if (ulogovaniKorisnik.getTipUloge().equals(TipUloge.KUPAC)) {
             Kupac ulogovaniKupac = (Kupac) ulogovaniKorisnik;
-
-            for (Porudzbina p : ulogovaniKupac.getPorudzbine()) {
-                for (PorucenArtikal a : p.getPoruceniArtikli()) {
-                    artikliDto.add(new ArtikalDto(a.getArtikal().getNaziv(), a.getArtikal().getCena(), a.getArtikal().getTip(), a.getKolicina(), a.getArtikal().getOpis()));
-                }
-                porudzbineDto.add(new PorudzbinaDto(artikliDto, p.getDatumIVreme(), p.getCena(), p.getStatus()));
-            }
-            return ResponseEntity.ok(porudzbineDto);
+            return ResponseEntity.ok(porudzbinaService.getPorudzbineFromKupac(ulogovaniKupac));
         }
 
-        if (ulogovaniKorisnik.getTipUloge().equals(TipUloge.DOSTAVLJAC)) {    //TODO msm da nije zavrseno
+        if (ulogovaniKorisnik.getTipUloge().equals(TipUloge.DOSTAVLJAC)) {    //TODO testiraj kad napunis bazu
             Dostavljac ulogovaniDostavljac = (Dostavljac) ulogovaniKorisnik;
 
-            for (Porudzbina p : ulogovaniDostavljac.getPorudzbine()) {
-                for (PorucenArtikal a : p.getPoruceniArtikli()) {
-                    ArtikalDto tmp = new ArtikalDto(a.getArtikal().getNaziv(), a.getArtikal().getCena(), a.getArtikal().getTip(), a.getKolicina(), a.getArtikal().getOpis());
-                    artikliDto.add(tmp);
-                }
-                PorudzbinaDto tmp = new PorudzbinaDto(artikliDto, p.getDatumIVreme(), p.getCena(), p.getStatus());
-                porudzbineDto.add(tmp);
-            }
-            return ResponseEntity.ok(porudzbineDto);
+            return ResponseEntity.ok(porudzbinaService.getPorudzbineFromDostavljac(ulogovaniDostavljac));
         }
         else
         {
@@ -86,7 +60,7 @@ public class PorudzbinaRestController {
     }
 
     @GetMapping("porudzbine_na_cekanju")
-    // ovu funkcionalnost ne mogu trenutno proveriti da li radi jer nisam iskucao kreiranje porudzbine kod korisnika
+    // TODO tesiraj
     public ResponseEntity<List<PorudzbinaDto>> getPorudzbineNaCekanju(HttpSession session) {
         Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
 
@@ -97,7 +71,6 @@ public class PorudzbinaRestController {
 
         List<Porudzbina> porudzbine = porudzbinaService.findAllByStatus(Status.CEKA_DOSTAVLJACA);
         List<PorudzbinaDto> porudzbineDto = new ArrayList<>();
-        //zasto hash set
         Set<ArtikalDto> artikliDto = new HashSet<>();
 
         for (Porudzbina p : porudzbine) {
@@ -116,7 +89,7 @@ public class PorudzbinaRestController {
         }
     }
 
-   /*@PostMapping("poruci_artikal_iz_restorana/{id1}/{id2}") // id1 je za artikal, a id2 za restoran
+    @PostMapping("dodaj_u_korpu/{id2}/{id1}") // id1 je za artikal, a id2 za restoran
     public ResponseEntity<String> dodajArtikalUKorpu(@PathVariable(name = "id1") Long id1, @PathVariable(name = "id2") Long id2, HttpSession session) {
         Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
 
@@ -147,7 +120,7 @@ public class PorudzbinaRestController {
         }
 
         // ovo radim ako je novokreirana porudzbina, i za nju se samo zna da je "u korpi", jos uvek se ne zna za restoran i kupca
-       /* if (porudzbina.getRestoran() == null) {
+        if (porudzbina.getRestoran() == null) {
             porudzbina.setRestoran(porudzbinaService.findRestoranById(id2));
             porudzbinaService.save(porudzbina);
         }
@@ -177,72 +150,27 @@ public class PorudzbinaRestController {
         porudzbinaService.saveKupac(ulogovaniKupac);
 
         return ResponseEntity.ok("Uspesno dodat artikal u porudzbinu");
-    }*/
+    }
 
-    @PostMapping("dodaj_u_korpu/{id_restorana}/{id_artikla}")
-    public ResponseEntity<String> dodajUKorpu (@PathVariable Long id_artikla, @PathVariable Long id_restorana, HttpSession session) {
+    @PutMapping("izbaci_iz_korpe/{id}")
+    public ResponseEntity<String> izbaciIzKorpe(@PathVariable Long id ,HttpSession session) {
         Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
-
         if (ulogovaniKorisnik == null)
             return new ResponseEntity<>("Niste ulogovani", HttpStatus.BAD_REQUEST);
         if (ulogovaniKorisnik.getTipUloge() != TipUloge.KUPAC)
             return new ResponseEntity<>("Ova funkcionalnost je dozvoljena samo kupcima", HttpStatus.BAD_REQUEST);
-
-        Artikal artikal = porudzbinaService.findArtikalById(id_artikla);
-        if (artikal == null)
-            return new ResponseEntity<>("Nije pronadjen taj artikal", HttpStatus.NOT_FOUND);
-        if (!porudzbinaService.isArtikalURestoranu(id_artikla, id_restorana))
-            return new ResponseEntity<>("Taj restoran nema izabrani artikal u ponudi", HttpStatus.NOT_FOUND);
+        Artikal artikal = porudzbinaService.findArtikalById(id);
+        if(artikal == null)
+            return new ResponseEntity<>("Artikal sa unetim id-om ne postoji", HttpStatus.BAD_REQUEST);
 
         Kupac ulogovaniKupac = (Kupac) ulogovaniKorisnik;
-        Porudzbina porudzbina = new Porudzbina();
-        boolean contains = false;
-        //provera da li kupac vec ima korpu sa nekim artiklima
-        for(Porudzbina p : ulogovaniKupac.getPorudzbine()) {
-            if(p.getStatus().equals(Status.U_KORPI)) {
-                porudzbina = p;
-                contains = true;
-                break;
-            }
-        }
+        //provera da li artikal postoji u korpi
+        if(!porudzbinaService.daLiJeArtikalUKorpi(ulogovaniKupac, id))
+            return new ResponseEntity<>("Artikal ne postoji u korpi", HttpStatus.BAD_REQUEST);
 
-        //ako nema dodajemo je
-        if(!contains) {
-            PorucenArtikal porucenArtikal = new PorucenArtikal(artikal,1);
-            porudzbinaService.savePorucenArtikal(porucenArtikal);
-            porudzbina.setStatus(Status.U_KORPI);
-            porudzbina.setKupac(ulogovaniKupac);
-            porudzbina.setRestoran(porudzbinaService.findRestoranById(id_restorana));
-            porudzbinaService.save(porudzbina);
-            porudzbina.dodajPoruceniArtikal(porucenArtikal);
-            porudzbinaService.save(porudzbina);
-            ulogovaniKupac.dodajPorudzbinu(porudzbina);
-            porudzbinaService.saveKupac(ulogovaniKupac);
-            return ResponseEntity.ok("Uspesno ste dodali artikal u korpu");
-        }
+        porudzbinaService.deleteFromKorpa(ulogovaniKupac, id);
 
-        //postoji korpa sa nekim artiklima, ali ne znamo jel to taj artikal
-
-        for(PorucenArtikal porucenArtikal : porudzbina.getPoruceniArtikli()) {
-            if (porucenArtikal.getArtikal().getID().equals(artikal.getID())) {
-                    porucenArtikal.setKolicina(porucenArtikal.getKolicina() + 1);
-                    porudzbinaService.savePorucenArtikal(porucenArtikal);
-                    porudzbinaService.save(porudzbina);
-                    porudzbinaService.saveKupac(ulogovaniKupac);
-                    return ResponseEntity.ok("Uspesno ste dodali artikal u korpu");
-                }
-            }
-
-        PorucenArtikal porucenArtikal = new PorucenArtikal(artikal,1);
-        porudzbinaService.savePorucenArtikal(porucenArtikal);
-        porudzbina.dodajPoruceniArtikal(porucenArtikal);
-        porudzbinaService.save(porudzbina);
-       // ulogovaniKupac.dodajPorudzbinu(porudzbina);
-        porudzbinaService.saveKupac(ulogovaniKupac);
-        return ResponseEntity.ok("Uspesno ste dodali artikal u korpu");
-
-
-
+        return ResponseEntity.ok("Uspesno ste izbacili artikal iz korpe");
     }
 
     @PostMapping("submit_korpe")

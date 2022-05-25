@@ -35,7 +35,7 @@ public class Kupac extends Korisnik implements Serializable {
     }
 
     public Set<Porudzbina> getPorudzbine() {
-        return porudzbine;
+        return this.porudzbine;
     }
 
     public int getBrojBodova() {

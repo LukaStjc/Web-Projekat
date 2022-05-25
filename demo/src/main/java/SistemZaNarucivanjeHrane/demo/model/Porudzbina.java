@@ -50,7 +50,7 @@ public class Porudzbina implements Serializable {
     }
 
     public Set<PorucenArtikal> getPoruceniArtikli() {
-        return poruceniArtikli;
+        return this.poruceniArtikli;
     }
 
     public Restoran getRestoran() {
@@ -99,14 +99,11 @@ public class Porudzbina implements Serializable {
 
     @Override
     public String toString() {
-        return "Porudzbina : " +
-                "ID = " + ID +
-                ", poruceniArtikli = " + poruceniArtikli +
-                ", restoran = " + restoran +
-                ", datumIVreme = " + datumIVreme +
-                ", cena = " + cena +
-                ", kupac = " + kupac +
-                ", status = " + status +
-                '\'';
+        return "Porudzbina{" +
+                "poruceniArtikli =" + poruceniArtikli +
+                ", datumIVreme =" + datumIVreme +
+                ", cena=" + cena +
+                ", status=" + status +
+                '}';
     }
 }
