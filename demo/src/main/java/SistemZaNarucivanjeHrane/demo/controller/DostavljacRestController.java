@@ -8,5 +8,5 @@ import org.springframework.web.bind.annotation.RestController;
 public class DostavljacRestController {
 
     @Autowired
-    private DostavljacService dostavljacService;
+    DostavljacService dostavljacService;
 }

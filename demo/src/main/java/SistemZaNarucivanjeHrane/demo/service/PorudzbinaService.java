@@ -11,19 +11,19 @@ import java.util.List;
 public class PorudzbinaService {
 
     @Autowired
-    private PorudzbinaRepository porudzbinaRepository;
+    PorudzbinaRepository porudzbinaRepository;
 
     @Autowired
-    private ArtikalService artikalService;
+    ArtikalService artikalService;
 
     @Autowired
-    private RestoranService restoranService;
+    RestoranService restoranService;
 
     @Autowired
-    private KupacService kupacService;
+    KupacService kupacService;
 
     @Autowired
-    private PorucenArtikalService porucenArtikalService;
+    PorucenArtikalService porucenArtikalService;
 
     public List<Porudzbina> findAll() {
         return porudzbinaRepository.findAll();
@@ -54,13 +54,4 @@ public class PorudzbinaService {
     public void save(Porudzbina porudzbina){
         porudzbinaRepository.save(porudzbina);
     }
-
-    public void saveArtikal(Artikal artikal){
-        artikalService.save(artikal);
-    }
-
-    public Restoran findRestoranByNaziv(String naziv) { return restoranService.findByNaziv(naziv); }
-
-    public Artikal findArtikalByNaziv(String naziv) { return artikalService.findByNaziv(naziv); }
-
 }

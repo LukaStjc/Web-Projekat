@@ -20,7 +20,7 @@ import java.util.Set;
 public class PorudzbinaRestController {
 
     @Autowired
-    private PorudzbinaService porudzbinaService;
+    PorudzbinaService porudzbinaService;
 
     @GetMapping("porudzbine")
     public ResponseEntity<List<PorudzbinaDto>> getPorudzbine(HttpSession session) {

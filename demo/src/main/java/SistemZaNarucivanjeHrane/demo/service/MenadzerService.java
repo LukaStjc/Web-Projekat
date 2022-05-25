@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class MenadzerService {
 
     @Autowired
-    private MenadzerRepository menadzerRepository;
+    MenadzerRepository menadzerRepository;
 
     public Menadzer findByKorisnickoIme(String korisnickoIme) { return menadzerRepository.findByKorisnickoIme(korisnickoIme); }
 

@@ -8,5 +8,5 @@ import org.springframework.web.bind.annotation.RestController;
 public class KomentarRestController {
 
     @Autowired
-    private KomentarService komentarService;
+    KomentarService komentarService;
 }

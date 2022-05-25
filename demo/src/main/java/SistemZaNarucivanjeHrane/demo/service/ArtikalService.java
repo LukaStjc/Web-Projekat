@@ -12,7 +12,7 @@ import java.util.Optional;
 public class ArtikalService {
 
     @Autowired
-    private ArtikalRepository artikalRepository;
+    ArtikalRepository artikalRepository;
 
     public void save(Artikal artikal){
         artikalRepository.save(artikal);

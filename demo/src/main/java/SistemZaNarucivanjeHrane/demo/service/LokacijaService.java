@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class LokacijaService {
 
     @Autowired
-    private LokacijaRepository lokacijaRepository;
+    LokacijaRepository lokacijaRepository;
 
     public Lokacija save(Lokacija lokacija) {
         return  lokacijaRepository.save(lokacija);
