@@ -8,5 +8,5 @@ import org.springframework.stereotype.Service;
 public class TipKupcaService {
 
     @Autowired
-    private TipKupcaRepository tipKupcaRepository;
+    TipKupcaRepository tipKupcaRepository;
 }

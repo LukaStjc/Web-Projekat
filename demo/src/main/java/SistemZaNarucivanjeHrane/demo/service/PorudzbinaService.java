@@ -15,19 +15,19 @@ import java.util.Set;
 public class PorudzbinaService {
 
     @Autowired
-    private PorudzbinaRepository porudzbinaRepository;
+    PorudzbinaRepository porudzbinaRepository;
 
     @Autowired
-    private ArtikalService artikalService;
+    ArtikalService artikalService;
 
     @Autowired
-    private RestoranService restoranService;
+    RestoranService restoranService;
 
     @Autowired
-    private KupacService kupacService;
+    KupacService kupacService;
 
     @Autowired
-    private PorucenArtikalService porucenArtikalService;
+    PorucenArtikalService porucenArtikalService;
 
     public List<Porudzbina> findAll() {
         return porudzbinaRepository.findAll();
@@ -58,6 +58,7 @@ public class PorudzbinaService {
     public void save(Porudzbina porudzbina){
         porudzbinaRepository.save(porudzbina);
     }
+<<<<<<< HEAD
 
     public void saveArtikal(Artikal artikal){
         artikalService.save(artikal);
@@ -182,4 +183,6 @@ public class PorudzbinaService {
     }
 
 
+=======
+>>>>>>> a3b909570efb15fc2d051866d445c41349d99ad7
 }

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class PorucenArtikalService {
 
     @Autowired
-    private PorucenArtikalRepository porucenArtikalRepository;
+    PorucenArtikalRepository porucenArtikalRepository;
 
     public void save(PorucenArtikal porucenArtikal){
         porucenArtikalRepository.save(porucenArtikal);

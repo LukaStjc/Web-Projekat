@@ -8,5 +8,5 @@ import org.springframework.web.bind.annotation.RestController;
 public class LokacijaRestController {
 
     @Autowired
-    private LokacijaService lokacijaService;
+    LokacijaService lokacijaService;
 }

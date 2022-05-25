@@ -11,7 +11,7 @@ import java.util.List;
 public class KomentarService {
 
     @Autowired
-    private KomentarRepository komentarRepository;
+    KomentarRepository komentarRepository;
 
     public List<Komentar> findAll(){
         return komentarRepository.findAll();

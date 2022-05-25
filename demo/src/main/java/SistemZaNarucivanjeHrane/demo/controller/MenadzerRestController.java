@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class MenadzerRestController {
 
     @Autowired
-    private MenadzerService menadzerService;
+    MenadzerService menadzerService;
 
 }

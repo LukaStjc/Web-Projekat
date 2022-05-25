@@ -69,9 +69,4 @@ public class NoviKorisnikDto {
     public String getDatumRodjenja() {
         return datumRodjenja;
     }
-
-    public void setDatumRodjenja(String datumRodjenja) {
-        this.datumRodjenja = datumRodjenja;
-    }
-
 }

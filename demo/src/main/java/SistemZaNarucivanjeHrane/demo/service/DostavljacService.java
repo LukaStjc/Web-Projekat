@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class DostavljacService {
 
     @Autowired
-    private DostavljacRepository dostavljacRepository;
+    DostavljacRepository dostavljacRepository;
 
     public Dostavljac findByKorisnickoIme(String korisnickoIme) {
         return dostavljacRepository.findByKorisnickoIme(korisnickoIme);

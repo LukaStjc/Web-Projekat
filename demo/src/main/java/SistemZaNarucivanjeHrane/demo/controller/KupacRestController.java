@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class KupacRestController {
 
     @Autowired
-    private KupacService kupacService;
+    KupacService kupacService;
 
 
 }
