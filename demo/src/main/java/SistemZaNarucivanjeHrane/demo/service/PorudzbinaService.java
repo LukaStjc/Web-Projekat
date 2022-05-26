@@ -86,6 +86,7 @@ public class PorudzbinaService {
     }
 
     public List<PorudzbinaMenadzerDto> getPorudzbineFromMenadzer(Menadzer menadzer) {
+
         List<Porudzbina> porudzbine = findAll();
         List<PorucenArtikalDto> poruceniArtikliDto = new ArrayList<>();
         List<PorudzbinaMenadzerDto> porudzbineDto = new ArrayList<>();
