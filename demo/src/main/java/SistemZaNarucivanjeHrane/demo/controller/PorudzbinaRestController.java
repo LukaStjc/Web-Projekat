@@ -1,8 +1,6 @@
 package SistemZaNarucivanjeHrane.demo.controller;
 
-import SistemZaNarucivanjeHrane.demo.dto.ArtikalDto;
-import SistemZaNarucivanjeHrane.demo.dto.PorudzbinaDto;
-import SistemZaNarucivanjeHrane.demo.dto.PorudzbineDto;
+import SistemZaNarucivanjeHrane.demo.dto.*;
 import SistemZaNarucivanjeHrane.demo.model.*;
 import SistemZaNarucivanjeHrane.demo.service.PorudzbinaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/api/")
@@ -23,73 +18,51 @@ public class PorudzbinaRestController {
     @Autowired
     PorudzbinaService porudzbinaService;
 
-    @GetMapping("porudzbine")
-    public ResponseEntity<List<PorudzbineDto>> getPorudzbine(HttpSession session) {
+    @GetMapping("menadzer/porudzbine") //RADI
+    public ResponseEntity<List<PorudzbinaMenadzerDto>> getPorudzbineForMenadzer(HttpSession session) {
         Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
 
         if (ulogovaniKorisnik == null)
             return new ResponseEntity("Niste ulogovani", HttpStatus.BAD_REQUEST);
+        if(!ulogovaniKorisnik.getTipUloge().equals(TipUloge.MENADZER))
+            return new ResponseEntity("Ova funkcionalnost je dostupna samo menadzerima", HttpStatus.BAD_REQUEST);
 
-        //TODO staviti i ovde new ArrayList<>() da se napravi objekat sa null da bude lepse
-        List<Porudzbina> porudzbine = new ArrayList<>();
-        List<PorudzbineDto> porudzbineDto = new ArrayList<>();
-        Set<ArtikalDto> artikliDto = new HashSet<>();
+        Menadzer ulogovaniMenadzer = (Menadzer) ulogovaniKorisnik;
 
-       if (ulogovaniKorisnik.getTipUloge().equals(TipUloge.MENADZER)) {
-           Menadzer ulogovaniMenadzer = (Menadzer) ulogovaniKorisnik;
-           return ResponseEntity.ok(porudzbinaService.getPorudzbineFromMenadzer(ulogovaniMenadzer));
-       }
-
-
-        if (ulogovaniKorisnik.getTipUloge().equals(TipUloge.KUPAC)) {
-            Kupac ulogovaniKupac = (Kupac) ulogovaniKorisnik;
-            return ResponseEntity.ok(porudzbinaService.getPorudzbineFromKupac(ulogovaniKupac));
-        }
-
-        if (ulogovaniKorisnik.getTipUloge().equals(TipUloge.DOSTAVLJAC)) {    //TODO testiraj kad napunis bazu
-            Dostavljac ulogovaniDostavljac = (Dostavljac) ulogovaniKorisnik;
-
-            return ResponseEntity.ok(porudzbinaService.getPorudzbineFromDostavljac(ulogovaniDostavljac));
-        }
-        else
-        {
-
-            return new ResponseEntity("Ova funkcionalnost nije dozvoljena adminima", HttpStatus.BAD_REQUEST);
-        }
+        return ResponseEntity.ok(porudzbinaService.getPorudzbineFromMenadzer(ulogovaniMenadzer));
 
     }
 
-    @GetMapping("porudzbine_na_cekanju")
-    // TODO tesiraj
-    public ResponseEntity<List<PorudzbinaDto>> getPorudzbineNaCekanju(HttpSession session) {
+    @GetMapping("kupac/porudzbine") //RADI
+    public ResponseEntity<List<PorudzbineDto>> getPorudzbineForKupac(HttpSession session) {
         Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
 
         if (ulogovaniKorisnik == null)
             return new ResponseEntity("Niste ulogovani", HttpStatus.BAD_REQUEST);
-        if (ulogovaniKorisnik.getTipUloge() != TipUloge.DOSTAVLJAC)
+        if(!ulogovaniKorisnik.getTipUloge().equals(TipUloge.KUPAC))
+            return new ResponseEntity("Ova funkcionalnost je dostupna samo menadzerima", HttpStatus.BAD_REQUEST);
+
+        Kupac ulogovaniKupac = (Kupac) ulogovaniKorisnik;
+
+        return ResponseEntity.ok(porudzbinaService.getPorudzbineFromKupac(ulogovaniKupac));
+
+    }
+
+    @GetMapping("dostavljac/porudzbine") //TODO testiraj
+    public ResponseEntity<List<PorudzbinaMenadzerDto>> getPorudzbineForDostavljac(HttpSession session) {
+        Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
+
+        if (ulogovaniKorisnik == null)
+            return new ResponseEntity("Niste ulogovani", HttpStatus.BAD_REQUEST);
+        if(!ulogovaniKorisnik.getTipUloge().equals(TipUloge.DOSTAVLJAC))
             return new ResponseEntity("Ova funkcionalnost je dostupna samo dostavljacima", HttpStatus.BAD_REQUEST);
 
-        List<Porudzbina> porudzbine = porudzbinaService.findAllByStatus(Status.CEKA_DOSTAVLJACA);
-        List<PorudzbinaDto> porudzbineDto = new ArrayList<>();
-        Set<ArtikalDto> artikliDto = new HashSet<>();
+        Dostavljac ulogovaniDostavljac = (Dostavljac) ulogovaniKorisnik;
 
-        for (Porudzbina p : porudzbine) {
-            for (PorucenArtikal a : p.getPoruceniArtikli()) {
-                ArtikalDto tmp = new ArtikalDto(a.getArtikal().getNaziv(), a.getArtikal().getCena(), a.getArtikal().getTip(), a.getKolicina(), a.getArtikal().getOpis());
-                artikliDto.add(tmp);
-            }
-            PorudzbinaDto tmp = new PorudzbinaDto(artikliDto, p.getDatumIVreme(), p.getCena(), p.getStatus());
-            porudzbineDto.add(tmp);
-        }
-
-        if (porudzbineDto.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return ResponseEntity.ok(porudzbineDto);
-        }
+        return ResponseEntity.ok(porudzbinaService.getPorudzbineFromDostavljac(ulogovaniDostavljac));
     }
 
-    @PostMapping("dodaj_u_korpu/{id2}/{id1}") // id1 je za artikal, a id2 za restoran
+    @PostMapping("dodaj_u_korpu/{id2}/{id1}") // id1 je za artikal, a id2 za restoran, videti da li radi ako korpa ne postoji
     public ResponseEntity<String> dodajArtikalUKorpu(@PathVariable(name = "id1") Long id1, @PathVariable(name = "id2") Long id2, HttpSession session) {
         Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
 
@@ -152,7 +125,7 @@ public class PorudzbinaRestController {
         return ResponseEntity.ok("Uspesno dodat artikal u porudzbinu");
     }
 
-    @PutMapping("izbaci_iz_korpe/{id}")
+    @DeleteMapping("izbaci_iz_korpe/{id}") //TODO greska foreign key
     public ResponseEntity<String> izbaciIzKorpe(@PathVariable Long id ,HttpSession session) {
         Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
         if (ulogovaniKorisnik == null)
@@ -173,10 +146,82 @@ public class PorudzbinaRestController {
         return ResponseEntity.ok("Uspesno ste izbacili artikal iz korpe");
     }
 
-    @PostMapping("submit_korpe")
-    public ResponseEntity<String> zavrsiSaKorpom(HttpSession session) {
+    @GetMapping("pregled_korpe") //RADI
+    public ResponseEntity<KorpaDto> pregledKorpe(HttpSession session) {
+        Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
+        if (ulogovaniKorisnik == null)
+            return new ResponseEntity("Niste ulogovani", HttpStatus.BAD_REQUEST);
+        if (ulogovaniKorisnik.getTipUloge() != TipUloge.KUPAC)
+            return new ResponseEntity("Ova funkcionalnost je dozvoljena samo kupcima", HttpStatus.BAD_REQUEST);
 
+        Kupac ulogovaniKupac = (Kupac) ulogovaniKorisnik;
 
-        return ResponseEntity.ok("cao");
+        return ResponseEntity.ok(porudzbinaService.getKorpa(ulogovaniKupac));
+
     }
+
+    @PutMapping("submit_korpe") //stavila sam put mapping jer se menja status korpe
+    public ResponseEntity<String> zavrsiSaKorpom(HttpSession session) {
+        Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
+        if (ulogovaniKorisnik == null)
+            return new ResponseEntity("Niste ulogovani", HttpStatus.BAD_REQUEST);
+        if (ulogovaniKorisnik.getTipUloge() != TipUloge.KUPAC)
+            return new ResponseEntity("Ova funkcionalnost je dozvoljena samo kupcima", HttpStatus.BAD_REQUEST);
+        Kupac ulogovaniKupac = (Kupac) ulogovaniKorisnik;
+
+        return ResponseEntity.ok(porudzbinaService.submitKorpe(ulogovaniKupac));
+    }
+
+    @PutMapping("poruzbina_u_pripremi/{id}") //RADI
+    public ResponseEntity<String> porudzbinaUPripremi(@PathVariable UUID id, HttpSession session) {
+        Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
+        if (ulogovaniKorisnik == null)
+            return new ResponseEntity("Niste ulogovani", HttpStatus.BAD_REQUEST);
+        if (ulogovaniKorisnik.getTipUloge() != TipUloge.MENADZER)
+            return new ResponseEntity("Ova funkcionalnost je dozvoljena samo menadzerima", HttpStatus.BAD_REQUEST);
+        if(porudzbinaService.findById(id) == null)
+            return new ResponseEntity("Porudzbina sa datim UUID-om ne postoji", HttpStatus.BAD_REQUEST);
+        Menadzer ulogovaniMenadzer = (Menadzer) ulogovaniKorisnik;
+        if(!porudzbinaService.isMenadzerOfPorudzbina(ulogovaniMenadzer,id)) {
+            return new ResponseEntity("Mozete da upravljate samo svojim porudzbinama", HttpStatus.BAD_REQUEST);
+        }
+
+        return ResponseEntity.ok(porudzbinaService.changeToUPripremi(id));
+    }
+
+    @PutMapping("porudzbina_u_transportu/{id}") //TODO testiraj
+    public ResponseEntity<String> porudzbinaUTransportu(@PathVariable UUID id, HttpSession session) {
+        Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
+        if (ulogovaniKorisnik == null)
+            return new ResponseEntity("Niste ulogovani", HttpStatus.BAD_REQUEST);
+        if (ulogovaniKorisnik.getTipUloge() != TipUloge.DOSTAVLJAC)
+            return new ResponseEntity("Ova funkcionalnost je dozvoljena samo dostavljacima", HttpStatus.BAD_REQUEST);
+        if(porudzbinaService.findById(id) == null)
+            return new ResponseEntity("Porudzbina sa datim UUID-om ne postoji", HttpStatus.BAD_REQUEST);
+        Dostavljac ulogovaniDostavljac = (Dostavljac) ulogovaniKorisnik;
+        if(!porudzbinaService.isDostavljacOfPorudzbina(ulogovaniDostavljac,id)) {
+            return new ResponseEntity("Mozete da upravljate samo svojim porudzbinama", HttpStatus.BAD_REQUEST);
+        }
+
+        return ResponseEntity.ok(porudzbinaService.changeToUTransportu(id));
+    }
+
+    @PutMapping("porudzbina_dostavljena/{id}") //TODO testiraj + vidi koliko korisnik ima bodova
+    public ResponseEntity<String> porudzbinaDostavljena(@PathVariable UUID id, HttpSession session) {
+        Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
+        if (ulogovaniKorisnik == null)
+            return new ResponseEntity("Niste ulogovani", HttpStatus.BAD_REQUEST);
+        if (ulogovaniKorisnik.getTipUloge() != TipUloge.DOSTAVLJAC)
+            return new ResponseEntity("Ova funkcionalnost je dozvoljena samo dostavljacima", HttpStatus.BAD_REQUEST);
+        if(porudzbinaService.findById(id) == null)
+            return new ResponseEntity("Porudzbina sa datim UUID-om ne postoji", HttpStatus.BAD_REQUEST);
+        Dostavljac ulogovaniDostavljac = (Dostavljac) ulogovaniKorisnik;
+        if(!porudzbinaService.isDostavljacOfPorudzbina(ulogovaniDostavljac,id)) {
+            return new ResponseEntity("Mozete da upravljate samo svojim porudzbinama", HttpStatus.BAD_REQUEST);
+        }
+
+        return ResponseEntity.ok(porudzbinaService.changeToDostavljena(id));
+    }
+
+
 }

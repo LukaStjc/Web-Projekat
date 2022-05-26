@@ -17,7 +17,7 @@ public class Kupac extends Korisnik implements Serializable {
     @JsonIgnore// bidirektna
     private Set<Porudzbina> porudzbine = new HashSet<>();
 
-    private int brojBodova;
+    private double brojBodova;
 
     //TODO @JoinColumn(name = "tipKupca_rang") u tabeli treba nekako dodati da pise rang jer ne moze da pise klasa
     private TipKupca tipKupca;
@@ -38,11 +38,11 @@ public class Kupac extends Korisnik implements Serializable {
         return this.porudzbine;
     }
 
-    public int getBrojBodova() {
+    public double getBrojBodova() {
         return brojBodova;
     }
 
-    public void setBrojBodova(int brojBodova) {
+    public void setBrojBodova(double brojBodova) {
         this.brojBodova = brojBodova;
     }
 
@@ -56,6 +56,14 @@ public class Kupac extends Korisnik implements Serializable {
 
     public void dodajPorudzbinu(Porudzbina porudzbina) {
         this.porudzbine.add(porudzbina);
+    }
+
+    public Porudzbina korpa() {
+        for(Porudzbina p : porudzbine) {
+            if (p.getStatus().equals(Status.U_KORPI))
+                return p;
+        }
+        return null;
     }
 
     /*@Override

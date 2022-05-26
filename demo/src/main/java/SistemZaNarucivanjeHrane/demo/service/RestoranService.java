@@ -47,6 +47,8 @@ public class RestoranService {
         return restoranRepository.findAll();
     }
 
+    public Restoran findByNaziv(String naziv) { return restoranRepository.findByNaziv(naziv); }
+
     public Restoran save(Restoran restoran) {
         return restoranRepository.save(restoran);
     }

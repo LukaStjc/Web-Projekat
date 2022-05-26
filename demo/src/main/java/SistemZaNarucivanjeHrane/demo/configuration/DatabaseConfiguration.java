@@ -96,11 +96,11 @@ public class DatabaseConfiguration {
 
         Set<PorucenArtikal> porucenArtikals = new HashSet<>();
         porucenArtikals.add(porucenArtikal1);
-        Porudzbina porudzbina = new Porudzbina(porucenArtikals, restoranSrpskaSicilija, 555, null, Status.U_PRIPREMI);
+        Porudzbina porudzbina = new Porudzbina(porucenArtikals, restoranSrpskaSicilija, 360, null, Status.U_PRIPREMI);
         porudzbinaRepository.save(porudzbina);
         Set<PorucenArtikal> porucenArtikals2 = new HashSet<>();
         porucenArtikals2.add(porucenArtikal2);
-        Porudzbina porudzbina2 = new Porudzbina(porucenArtikals2, restoranSrpskaSicilija, 300, null, Status.U_KORPI);
+        Porudzbina porudzbina2 = new Porudzbina(porucenArtikals2, restoranSrpskaSicilija, 150, null, Status.U_KORPI);
         porudzbinaRepository.save(porudzbina2);
 
         TipKupca tipKupca = new TipKupca("zlatni", 0.3, 33); //Lupila sam koji su podaci za tip kupca, to treba smisliti lepo

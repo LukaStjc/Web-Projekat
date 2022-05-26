@@ -14,4 +14,6 @@ public class PorucenArtikalService {
     public void save(PorucenArtikal porucenArtikal){
         porucenArtikalRepository.save(porucenArtikal);
     }
+
+    public void delete(PorucenArtikal porucenArtikal) { porucenArtikalRepository.delete(porucenArtikal);}
 }

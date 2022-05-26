@@ -1,15 +1,15 @@
 package SistemZaNarucivanjeHrane.demo.service;
 
+import SistemZaNarucivanjeHrane.demo.dto.KorpaDto;
 import SistemZaNarucivanjeHrane.demo.dto.PorucenArtikalDto;
+import SistemZaNarucivanjeHrane.demo.dto.PorudzbinaMenadzerDto;
 import SistemZaNarucivanjeHrane.demo.dto.PorudzbineDto;
 import SistemZaNarucivanjeHrane.demo.model.*;
 import SistemZaNarucivanjeHrane.demo.repository.PorudzbinaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class PorudzbinaService {
@@ -32,6 +32,8 @@ public class PorudzbinaService {
     public List<Porudzbina> findAll() {
         return porudzbinaRepository.findAll();
     }
+
+    public Porudzbina findById(UUID id) { return porudzbinaRepository.findById(id).get(); }
 
     public List<Porudzbina> findAllByStatus(Status status){return porudzbinaRepository.findAllByStatus(status);}
 
@@ -58,7 +60,6 @@ public class PorudzbinaService {
     public void save(Porudzbina porudzbina){
         porudzbinaRepository.save(porudzbina);
     }
-<<<<<<< HEAD
 
     public void saveArtikal(Artikal artikal){
         artikalService.save(artikal);
@@ -84,16 +85,16 @@ public class PorudzbinaService {
         return porudzbineDto;
     }
 
-    public List<PorudzbineDto> getPorudzbineFromMenadzer(Menadzer menadzer) {
+    public List<PorudzbinaMenadzerDto> getPorudzbineFromMenadzer(Menadzer menadzer) {
         List<Porudzbina> porudzbine = findAll();
         List<PorucenArtikalDto> poruceniArtikliDto = new ArrayList<>();
-        List<PorudzbineDto> porudzbineDto = new ArrayList<>();
+        List<PorudzbinaMenadzerDto> porudzbineDto = new ArrayList<>();
         for(Porudzbina p : porudzbine) {
             if(p.getRestoran().getID().equals(menadzer.getRestoran().getID())) {
                 for(PorucenArtikal a : p.getPoruceniArtikli()) {
                     poruceniArtikliDto.add(new PorucenArtikalDto(a.getArtikal().getNaziv(), a.getArtikal().getCena(), a.getKolicina()));
                 }
-                PorudzbineDto porudzbinaDto = new PorudzbineDto(new ArrayList<PorucenArtikalDto>(poruceniArtikliDto), p.getCena(), p.getStatus(), p.getRestoran().getNaziv());
+                PorudzbinaMenadzerDto porudzbinaDto = new PorudzbinaMenadzerDto(p.getID(), new ArrayList<PorucenArtikalDto>(poruceniArtikliDto), p.getDatumIVreme(), p.getCena(), p.getKupac().getKorisnickoIme(), p.getStatus());
                 porudzbineDto.add(porudzbinaDto);
                 poruceniArtikliDto.removeAll(poruceniArtikliDto);
             }
@@ -103,16 +104,16 @@ public class PorudzbinaService {
         return porudzbineDto;
     }
 
-    public List<PorudzbineDto> getPorudzbineFromDostavljac(Dostavljac dostavljac) {
+    public List<PorudzbinaMenadzerDto> getPorudzbineFromDostavljac(Dostavljac dostavljac) {
         Set<Porudzbina> porudzbineDostavljaca = dostavljac.getPorudzbine();
         List<PorucenArtikalDto> poruceniArtikliDto = new ArrayList<>();
-        List<PorudzbineDto> porudzbineDto = new ArrayList<>();
+        List<PorudzbinaMenadzerDto> porudzbineDto = new ArrayList<>();
         //njegove porudzbine
         for(Porudzbina p : porudzbineDostavljaca) {
             for(PorucenArtikal a : p.getPoruceniArtikli()) {
                 poruceniArtikliDto.add(new PorucenArtikalDto(a.getArtikal().getNaziv(), a.getArtikal().getCena(), a.getKolicina()));
             }
-            PorudzbineDto porudzbinaDto = new PorudzbineDto(new ArrayList<PorucenArtikalDto>(poruceniArtikliDto), p.getCena(), p.getStatus(), p.getRestoran().getNaziv());
+            PorudzbinaMenadzerDto porudzbinaDto = new PorudzbinaMenadzerDto(p.getID(), new ArrayList<PorucenArtikalDto>(poruceniArtikliDto), p.getDatumIVreme(), p.getCena(), p.getKupac().getKorisnickoIme(), p.getStatus());
             porudzbineDto.add(porudzbinaDto);
             poruceniArtikliDto.removeAll(poruceniArtikliDto);
         }
@@ -124,7 +125,7 @@ public class PorudzbinaService {
                 for(PorucenArtikal a : p.getPoruceniArtikli()) {
                     poruceniArtikliDto.add(new PorucenArtikalDto(a.getArtikal().getNaziv(), a.getArtikal().getCena(), a.getKolicina()));
                 }
-                PorudzbineDto porudzbinaDto = new PorudzbineDto(new ArrayList<PorucenArtikalDto>(poruceniArtikliDto), p.getCena(), p.getStatus(), p.getRestoran().getNaziv());
+                PorudzbinaMenadzerDto porudzbinaDto = new PorudzbinaMenadzerDto(p.getID(), new ArrayList<PorucenArtikalDto>(poruceniArtikliDto), p.getDatumIVreme(), p.getCena(), p.getKupac().getKorisnickoIme(), p.getStatus());
                 porudzbineDto.add(porudzbinaDto);
                 poruceniArtikliDto.removeAll(poruceniArtikliDto);
             }
@@ -157,32 +158,106 @@ public class PorudzbinaService {
 
     }
 
-    public void deleteFromKorpa(Kupac kupac, Long id) { //TODO promeni ukupnu cenu i ako je prazan obrisi korpu
-        Porudzbina korpa = new Porudzbina();
-        for(Porudzbina p : kupac.getPorudzbine()) {
-            if(p.getStatus().equals(Status.U_KORPI)) {
-                korpa = p;
-                break;
-            }
-        }
+    public void deleteFromKorpa(Kupac kupac, Long id) { //TODO videti da li treba brisati korpu
+        Porudzbina korpa = kupac.korpa();
 
         for(PorucenArtikal a : korpa.getPoruceniArtikli()) {
             if(a.getArtikal().getID().equals(id)) {
-                korpa.getPoruceniArtikli().remove(a);
-                korpa.setCena(korpa.getCena() - a.getArtikal().getCena());
-                save(korpa);
-                saveKupac(kupac);
-                break;
+                if(a.getKolicina() != 1) {
+                    a.setKolicina(a.getKolicina() - 1);
+                    savePorucenArtikal(a);
+                    korpa.setCena(korpa.getCena() - a.getArtikal().getCena());
+                    save(korpa);
+                    saveKupac(kupac);
+                    return;
+                }
+                else {
+                    korpa.getPoruceniArtikli().remove(a);
+                    korpa.setCena(korpa.getCena() - a.getArtikal().getCena());
+                    porucenArtikalService.delete(a);
+                    save(korpa);
+                    saveKupac(kupac);
+                    return;
+                }
             }
         }
 
-        /*if(korpa.getPoruceniArtikli().isEmpty()) {
+        if(korpa.getPoruceniArtikli().isEmpty()) {
             kupac.getPorudzbine().remove(korpa);
             saveKupac(kupac);
-        }*/
+        } //TODO da li brisati korpu ako je prazna, ja mislim da je bolje da obrisemo jer korpa sadrzi ime restorana a mozda se kupac predomislio i hoce drugi restoran
     }
 
+    public KorpaDto getKorpa(Kupac kupac) {
+        Porudzbina korpa = kupac.korpa();
 
-=======
->>>>>>> a3b909570efb15fc2d051866d445c41349d99ad7
+        List<PorucenArtikalDto> poruceniArtikli = new ArrayList<>();
+        for(PorucenArtikal a : korpa.getPoruceniArtikli()) {
+            poruceniArtikli.add(new PorucenArtikalDto(a.getArtikal().getNaziv(), a.getArtikal().getCena(), a.getKolicina()));
+        }
+
+        KorpaDto korpaDto = new KorpaDto(poruceniArtikli, korpa.getCena());
+        return korpaDto;
+
+    }
+
+    public String submitKorpe(Kupac kupac) {
+        Porudzbina korpa = kupac.korpa();
+        korpa.setStatus(Status.OBRADA);
+        save(korpa);
+        saveKupac(kupac);
+        return "Uspesno ste napravili porudzbinu";
+    }
+
+    public boolean isMenadzerOfPorudzbina(Menadzer menadzer, UUID id) {
+        Porudzbina porudzbina = findById(id);
+        if(porudzbina.getRestoran().getID().equals(menadzer.getRestoran().getID()))
+            return true;
+        return false;
+    }
+
+    public boolean isDostavljacOfPorudzbina(Dostavljac dostavljac, UUID id) {
+        Porudzbina porudzbina = findById(id);
+        if(dostavljac.getPorudzbine().contains(porudzbina))
+            return true;
+        return false;
+    }
+
+    public String changeToUPripremi(UUID id) {
+        Porudzbina porudzbina = findById(id);
+        if(porudzbina.getStatus().equals(Status.U_KORPI)) {
+            porudzbina.setStatus(Status.U_PRIPREMI);
+            save(porudzbina);
+            return "Uspesno ste izmenili stanje korpe u U_PRIPREMI";
+        }
+        else
+            return "Ova opcija je moguca samo za porudzbinu koja je korpa";
+    }
+
+    public String changeToUTransportu(UUID id) {
+        Porudzbina porudzbina = findById(id);
+        if(porudzbina.getStatus().equals(Status.U_PRIPREMI)) {
+            porudzbina.setStatus(Status.U_TRANSPORTU);
+            save(porudzbina);
+            return "Uspesno ste izmenili stanje porudzbine u U_TRANSPORTU";
+        }
+        else
+            return "Ova opcija je moguca samo za porudzbinu koja je u pripremi";
+
+    }
+
+    public String changeToDostavljena(UUID id) {
+        Porudzbina porudzbina = findById(id);
+        if(porudzbina.getStatus().equals(Status.U_TRANSPORTU)) {
+            porudzbina.setStatus(Status.DOSTAVLJENA);
+            save(porudzbina);
+            Kupac kupac = porudzbina.getKupac();
+            kupac.setBrojBodova((kupac.getBrojBodova() + porudzbina.getCena()/1000*133));
+            saveKupac(kupac);
+            return "Uspesno ste izmenili stanje korpe u DOSTAVLJENA";
+        }
+        else
+            return "Ova opcija je moguca samo za porudzbinu koja je u transportu";
+
+    }
 }

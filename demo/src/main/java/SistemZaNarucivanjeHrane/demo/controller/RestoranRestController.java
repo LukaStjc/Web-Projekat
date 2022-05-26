@@ -1,6 +1,9 @@
 package SistemZaNarucivanjeHrane.demo.controller;
 
-import SistemZaNarucivanjeHrane.demo.dto.*;
+import SistemZaNarucivanjeHrane.demo.dto.ArtikalDto;
+import SistemZaNarucivanjeHrane.demo.dto.RestoranDetaljno;
+import SistemZaNarucivanjeHrane.demo.dto.RestoranDto;
+import SistemZaNarucivanjeHrane.demo.dto.RestoranIzlazniDto;
 import SistemZaNarucivanjeHrane.demo.model.*;
 import SistemZaNarucivanjeHrane.demo.service.RestoranService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class RestoranRestController {
     String FILE_DIRECTORY;
 
     @PostMapping("moj_restoran/dodaj_artikal")
-    public ResponseEntity<String> addArtikal(@RequestParam ArtikalSaSlikomDto artikalDto, HttpSession session) throws IOException {
+    public ResponseEntity<String> addArtikal(@RequestParam ArtikalDto artikalDto, HttpSession session) throws IOException {
         Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
 
         if (ulogovaniKorisnik == null)
@@ -35,14 +36,9 @@ public class RestoranRestController {
         if (ulogovaniKorisnik.getTipUloge() != TipUloge.MENADZER)
             return new ResponseEntity<>("Ova funkcionalnost je dostupna samo menadzerima", HttpStatus.BAD_REQUEST);
 
-        File myFile = new File(FILE_DIRECTORY+ artikalDto.getSlika().getOriginalFilename());
-        myFile.createNewFile();
-        FileOutputStream fos = new FileOutputStream(myFile);
-        fos.write(artikalDto.getSlika().getBytes());
+
         Artikal artikal = new Artikal(artikalDto.getNaziv(), artikalDto.getCena(), artikalDto.getTip(), artikalDto.getKolicina(), artikalDto.getOpis());
-        artikal.setSlika(myFile);
         restoranService.saveArtikal(artikal);
-        fos.close();
 
         Menadzer ulogovaniMenadzer = (Menadzer) ulogovaniKorisnik;
         Restoran restoran = ulogovaniMenadzer.getRestoran();
