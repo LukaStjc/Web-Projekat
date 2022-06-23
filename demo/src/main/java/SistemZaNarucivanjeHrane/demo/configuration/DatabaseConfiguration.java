@@ -96,7 +96,7 @@ public class DatabaseConfiguration {
 
         Set<PorucenArtikal> porucenArtikals = new HashSet<>();
         porucenArtikals.add(porucenArtikal1);
-        Porudzbina porudzbina = new Porudzbina(porucenArtikals, restoranSrpskaSicilija, 360, null, Status.U_PRIPREMI);
+        Porudzbina porudzbina = new Porudzbina(porucenArtikals, restoranSrpskaSicilija, 360, null, Status.CEKA_DOSTAVLJACA);
         porudzbinaRepository.save(porudzbina);
         Set<PorucenArtikal> porucenArtikals2 = new HashSet<>();
         porucenArtikals2.add(porucenArtikal2);

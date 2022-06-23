@@ -146,6 +146,8 @@ public class PorudzbinaRestController {
         return ResponseEntity.ok("Uspesno ste izbacili artikal iz korpe");
     }
 
+    //TODO dodaj menjanje kolicine u korpu
+
     @GetMapping("pregled_korpe") //RADI
     public ResponseEntity<KorpaDto> pregledKorpe(HttpSession session) {
         Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
@@ -189,6 +191,25 @@ public class PorudzbinaRestController {
         return ResponseEntity.ok(porudzbinaService.changeToUPripremi(id));
     }
 
+    //TODO istestiraj
+    @PutMapping("poruzbina_ceka_dostavljaca/{id1}/{id2}") //id1 id porudzbine, id2 id dostavljaca
+    public ResponseEntity<String> porudzbinaCekaDostavljaca(@PathVariable UUID id, @PathVariable String id_d, HttpSession session) {
+        Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
+        if (ulogovaniKorisnik == null)
+            return new ResponseEntity("Niste ulogovani", HttpStatus.BAD_REQUEST);
+        if (ulogovaniKorisnik.getTipUloge() != TipUloge.MENADZER)
+            return new ResponseEntity("Ova funkcionalnost je dozvoljena samo menadzerima", HttpStatus.BAD_REQUEST);
+        if(porudzbinaService.findById(id) == null)
+            return new ResponseEntity("Porudzbina sa datim UUID-om ne postoji", HttpStatus.BAD_REQUEST);
+        Menadzer ulogovaniMenadzer = (Menadzer) ulogovaniKorisnik;
+        if(!porudzbinaService.isMenadzerOfPorudzbina(ulogovaniMenadzer,id)) {
+            return new ResponseEntity("Mozete da upravljate samo svojim porudzbinama", HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(porudzbinaService.changeToCekaDostavljaca(id, id_d));
+    }
+
+
+
     @PutMapping("porudzbina_u_transportu/{id}") //TODO testiraj
     public ResponseEntity<String> porudzbinaUTransportu(@PathVariable UUID id, HttpSession session) {
         Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
@@ -199,9 +220,9 @@ public class PorudzbinaRestController {
         if(porudzbinaService.findById(id) == null)
             return new ResponseEntity("Porudzbina sa datim UUID-om ne postoji", HttpStatus.BAD_REQUEST);
         Dostavljac ulogovaniDostavljac = (Dostavljac) ulogovaniKorisnik;
-        if(!porudzbinaService.isDostavljacOfPorudzbina(ulogovaniDostavljac,id)) {
+        /*if(!porudzbinaService.isDostavljacOfPorudzbina(ulogovaniDostavljac,id)) {
             return new ResponseEntity("Mozete da upravljate samo svojim porudzbinama", HttpStatus.BAD_REQUEST);
-        }
+        }*/
 
         return ResponseEntity.ok(porudzbinaService.changeToUTransportu(id));
     }
@@ -216,9 +237,9 @@ public class PorudzbinaRestController {
         if(porudzbinaService.findById(id) == null)
             return new ResponseEntity("Porudzbina sa datim UUID-om ne postoji", HttpStatus.BAD_REQUEST);
         Dostavljac ulogovaniDostavljac = (Dostavljac) ulogovaniKorisnik;
-        if(!porudzbinaService.isDostavljacOfPorudzbina(ulogovaniDostavljac,id)) {
+        /*if(!porudzbinaService.isDostavljacOfPorudzbina(ulogovaniDostavljac,id)) {
             return new ResponseEntity("Mozete da upravljate samo svojim porudzbinama", HttpStatus.BAD_REQUEST);
-        }
+        }*/
 
         return ResponseEntity.ok(porudzbinaService.changeToDostavljena(id));
     }

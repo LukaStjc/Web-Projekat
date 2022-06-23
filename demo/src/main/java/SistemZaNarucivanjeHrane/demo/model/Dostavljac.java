@@ -30,5 +30,9 @@ public class Dostavljac extends Korisnik implements Serializable {
         return porudzbine;
     }
 
+    public void dodajPorudzbinu(Porudzbina porudzbina) {
+        porudzbine.add(porudzbina);
+    }
+
 
 }

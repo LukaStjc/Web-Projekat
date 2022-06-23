@@ -1,6 +1,7 @@
 package SistemZaNarucivanjeHrane.demo.model;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import java.io.Serializable;
@@ -9,7 +10,7 @@ import java.time.LocalDate;
 @Entity
 public class Menadzer extends Korisnik implements Serializable {
 
-    @OneToOne//(fetch = FetchType.EAGER)   // unidirektna
+    @OneToOne(fetch = FetchType.EAGER)   // unidirektna
     @JoinColumn(name = "restoran_id")
     private Restoran restoran;
 

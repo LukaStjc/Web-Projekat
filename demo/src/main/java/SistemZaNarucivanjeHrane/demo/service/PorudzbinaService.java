@@ -29,6 +29,9 @@ public class PorudzbinaService {
     @Autowired
     PorucenArtikalService porucenArtikalService;
 
+    @Autowired
+    DostavljacService dostavljacService;
+
     public List<Porudzbina> findAll() {
         return porudzbinaRepository.findAll();
     }
@@ -205,8 +208,7 @@ public class PorudzbinaService {
     public String submitKorpe(Kupac kupac) {
         Porudzbina korpa = kupac.korpa();
         korpa.setStatus(Status.OBRADA);
-        save(korpa);
-        saveKupac(kupac);
+        porudzbinaRepository.save(korpa);
         return "Uspesno ste napravili porudzbinu";
     }
 
@@ -226,13 +228,29 @@ public class PorudzbinaService {
 
     public String changeToUPripremi(UUID id) {
         Porudzbina porudzbina = findById(id);
-        if(porudzbina.getStatus().equals(Status.U_KORPI)) {
+        if(porudzbina.getStatus().equals(Status.OBRADA)) {
             porudzbina.setStatus(Status.U_PRIPREMI);
             save(porudzbina);
             return "Uspesno ste izmenili stanje korpe u U_PRIPREMI";
         }
         else
-            return "Ova opcija je moguca samo za porudzbinu koja je korpa";
+            return "Ova opcija je moguca samo za porudzbinu koja je u obradi";
+    }
+
+    public String changeToCekaDostavljaca(UUID id, String id_d) {
+        Porudzbina porudzbina = findById(id);
+        Dostavljac dostavljac = dostavljacService.findByKorisnickoIme(id_d);
+        if(dostavljac == null)
+            return "Dostavljac sa datim korisnickim imenom ne postoji";
+        if(porudzbina.getStatus().equals(Status.U_PRIPREMI)) {
+            porudzbina.setStatus(Status.CEKA_DOSTAVLJACA);
+            save(porudzbina);
+            dostavljac.dodajPorudzbinu(porudzbina);
+            dostavljacService.save(dostavljac);
+            return "Uspesno ste izmenili stanje korpe u CEKA_DOSTAVLJACA";
+        }
+        else
+            return "Ova opcija je moguca samo za porudzbinu koja je u pripremi";
     }
 
     public String changeToUTransportu(UUID id) {
@@ -255,6 +273,7 @@ public class PorudzbinaService {
             Kupac kupac = porudzbina.getKupac();
             kupac.setBrojBodova((kupac.getBrojBodova() + porudzbina.getCena()/1000*133));
             saveKupac(kupac);
+            //kada promeni broj bodova proveri da li treba da promeni ulogu
             return "Uspesno ste izmenili stanje korpe u DOSTAVLJENA";
         }
         else

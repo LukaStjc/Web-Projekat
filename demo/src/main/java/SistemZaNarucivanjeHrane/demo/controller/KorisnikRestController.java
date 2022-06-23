@@ -50,4 +50,9 @@ public class KorisnikRestController {
         return korisnikService.getKorisnici(session);
     }
 
+    @GetMapping("/pretrazi_korisnike/{parametar}")
+    public ResponseEntity<List<Korisnik>> pretraziKorisnike(HttpSession session, @PathVariable String parametar) {
+        return korisnikService.pretraga(session, parametar);
+    }
+
 }

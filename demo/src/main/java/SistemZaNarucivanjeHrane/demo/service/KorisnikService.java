@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -127,5 +128,25 @@ public class KorisnikService {
 
         List<Korisnik> korisnici = findAll();
         return ResponseEntity.ok(korisnici);
+    }
+
+    public ResponseEntity<List<Korisnik>> pretraga(HttpSession session, String parametar) {
+        Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
+
+        if(ulogovaniKorisnik == null)
+            return new ResponseEntity("Niste ulogovani.", HttpStatus.BAD_REQUEST);
+        if(ulogovaniKorisnik.getTipUloge() != TipUloge.ADMIN)
+            return new ResponseEntity("Ova funkcionalnost je dostupna samo administratorima", HttpStatus.BAD_REQUEST);
+
+        List<Korisnik> sviKorisnici = findAll();
+        List<Korisnik> trazeniKorisnici = new ArrayList<>();
+        for(Korisnik korisnik : sviKorisnici) {
+            if(korisnik.getIme().contains(parametar) || korisnik.getPrezime().contains(parametar) || korisnik.getKorisnickoIme().contains(parametar))
+                trazeniKorisnici.add(korisnik);
+        }
+
+        return ResponseEntity.ok(trazeniKorisnici);
+
+
     }
 }

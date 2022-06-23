@@ -31,6 +31,9 @@ public class RestoranService {
     @Autowired
     KomentarService komentarService;
 
+    @Autowired
+    PorudzbinaService porudzbinaService;
+
     public Restoran findRestoranById(Long id) {
         List<Restoran> restorani = restoranRepository.findAll();
 
@@ -102,7 +105,7 @@ public class RestoranService {
         for (Artikal artikal : restoran.getJelovnik()) {
             if (artikal.getID().equals(id)) {
                 restoran.getJelovnik().remove(artikal);
-                deleteArtikal(artikal);
+                //deleteArtikal(artikal); //ne znamo da li treba da se brise i da li ce raditi bez ovoga
                 save(restoran);
                 return ResponseEntity.ok("Uspesno obrisan artikal");
             }
@@ -256,5 +259,46 @@ public class RestoranService {
             return new ResponseEntity("Ne postoji restoran sa unetim nazivom", HttpStatus.BAD_REQUEST);
 
         return ResponseEntity.ok(trazeniRestorani);
+    }
+
+    public ResponseEntity<String> obrisiRestoran(HttpSession session, Long id) {
+        Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
+
+        if (ulogovaniKorisnik == null)
+            return new ResponseEntity("Niste ulogovani.", HttpStatus.BAD_REQUEST);
+        if (ulogovaniKorisnik.getTipUloge() != TipUloge.ADMIN)
+            return new ResponseEntity("Ova funkcionalnost je dostupna samo administratorima", HttpStatus.BAD_REQUEST);
+        if (restoranRepository.findById(id) == null)
+            return new ResponseEntity("Uneti restoran ne postoji", HttpStatus.BAD_REQUEST);
+
+        Restoran restoran = restoranRepository.findById(id).get();
+        //komentar
+        for(Komentar komentar : komentarService.findAll()) {
+            if(komentar.getRestoran().equals(restoran)) {
+                komentar.setRestoran(null);
+                komentarService.save(komentar);
+            }
+        }
+
+        //menadzer
+        for(Menadzer menadzer : menadzerService.findAll()) {
+            if(menadzer.getRestoran().equals(restoran)) {
+                menadzer.setRestoran(null);
+                menadzerService.save(menadzer);
+            }
+        }
+
+        //porudzbina
+        for(Porudzbina porudzbina : porudzbinaService.findAll()) {
+            if(porudzbina.getRestoran().equals(restoran)) {
+                porudzbina.setRestoran(null);
+                porudzbinaService.save(porudzbina);
+            }
+        }
+
+        restoranRepository.delete(restoran);
+        return ResponseEntity.ok("Restoran uspesno obrisan");
+
+
     }
 }

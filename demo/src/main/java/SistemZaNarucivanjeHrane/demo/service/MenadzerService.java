@@ -5,6 +5,8 @@ import SistemZaNarucivanjeHrane.demo.repository.MenadzerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class MenadzerService {
 
@@ -16,4 +18,6 @@ public class MenadzerService {
     public Menadzer save(Menadzer menadzer) {
         return  menadzerRepository.save(menadzer);
     }
+
+    public List<Menadzer> findAll() { return menadzerRepository.findAll(); }
 }

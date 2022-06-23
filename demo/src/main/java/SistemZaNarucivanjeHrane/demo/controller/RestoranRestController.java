@@ -7,7 +7,6 @@ import SistemZaNarucivanjeHrane.demo.dto.RestoranIzlazniDto;
 import SistemZaNarucivanjeHrane.demo.model.*;
 import SistemZaNarucivanjeHrane.demo.service.RestoranService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,10 +21,6 @@ public class RestoranRestController {
 
     @Autowired
     RestoranService restoranService;
-
-    //TODO dodati sliku kao parametar metode
-    @Value("${file.upload-dir}")
-    String FILE_DIRECTORY;
 
     @PostMapping("moj_restoran/dodaj_artikal")
     public ResponseEntity<String> addArtikal(@RequestParam ArtikalDto artikalDto, HttpSession session) throws IOException {
@@ -83,8 +78,16 @@ public class RestoranRestController {
         return restoranService.getRestorani();
     }
 
-    @GetMapping("restoran/pretrazi")
+    @GetMapping("restoran/pretrazi") //path ili kveri
     public ResponseEntity<List<Restoran>> getRestoranPoNazivu(@RequestBody RestoranDto restoranDto) {
         return restoranService.getRestoranPoNazivu(restoranDto);
     }
+
+    @DeleteMapping("obrisi_restoran/{id}") //id restorana koji se brise
+    public ResponseEntity<String> deleteRestoran(@PathVariable Long id, HttpSession session) {
+        return restoranService.obrisiRestoran(session, id);
+    }
+
+
+
 }

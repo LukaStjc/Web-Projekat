@@ -14,7 +14,7 @@ public class Komentar implements Serializable {
     @JoinColumn(name = "kupac_id")
     private Kupac kupac;
 
-    @ManyToOne(fetch = FetchType.LAZY) //undirektna
+    @ManyToOne(fetch = FetchType.EAGER) //undirektna
     @JoinColumn(name = "restoran_id")
     private Restoran restoran;
 

@@ -13,4 +13,5 @@ import java.util.UUID;
 public interface PorudzbinaRepository extends JpaRepository<Porudzbina, UUID> {
     List<Porudzbina> findAllByStatus(Status status);
     Optional<Porudzbina> findById(UUID id);
+    Porudzbina save(Porudzbina porudzbina);
 }
