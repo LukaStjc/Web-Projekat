@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Pocetna from '../views/Pocetna.vue'
 import Login from '../views/Login.vue'
+import Registracija from '../views/Registracija.vue'
 
 const routes = [
   {
@@ -19,6 +20,11 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/registracija',
+    name: 'Registracija',
+    component: Registracija
   }
 ]
 

@@ -3,12 +3,12 @@
         <NavBarNoButtons />
         <form style="width:500px" class="position-absolute top-50 start-50 translate-middle">
             <div class="mb-3">
-                <label for="korisnickoIme" class="form-label">Korisničko ime</label>
-                <input type="korisnickoIme" class="form-control" id="KorisnickoIme" aria-describedby="emailHelp">
+                <label for="inputEmail14" class="form-label">Korisničko ime</label>
+                <input v-model="korisnik.korisnickoIme" class="form-control" />
             </div>
             <div class="mb-3">
-                <label for="exampleInputPassword1" class="form-label">Šifra</label>
-                <input type="sifra" class="form-control" id="exampleInputPassword1">
+                <label for="inputPassword4" class="form-label">Lozinka</label>
+                <input v-model="korisnik.lozinka" type="password" class="form-control" />
             </div>
             <button type="submit" v-on:click="combination()" class="btn btn-primary">Prijavi se</button>
         </form>
@@ -33,38 +33,38 @@ export default {
         };
     },
 
+    components: {
+        NavBarNoButtons,
+    },
+    
     methods: {
 
         prijaviSe: function () {
             axios
-                .post("http://localhost:8080/api/korisnik/login", this.korisnik, {
+                .post("http://localhost:8081/api/korisnik/login", this.korisnik, {
                     withCredentials: true
                 })
                 .then(res => {
                     console.log(res);
-                    alert("Uspesno");
                 })
                 .catch(error => {
                     console.log(error.response);
                     alert("Neuspesno");
                 });
         },
-        components: {
-            NavBarNoButtons,
-        },
 
 
-        getRole: function () {
+        getUloga: function () {
             axios
-                .get("http://localhost:8080/api/korisnici/role", { withCredentials: true })
+                .get("http://localhost:8081/api/korisnik/uloga", { withCredentials: true })
                 .then((res) => {
                     this.uloga = res.data
                     console.log(this.uloga)
-                    if (this.uloga == "Admin") {
+                    if (this.uloga == "admin") {
                         this.$router.push("/admin");
-                    } else if (this.uloga == "Dostavljac") {
+                    } else if (this.uloga == "dostavljac") {
                         //this.$router.push("/dostavljac");
-                    } else if (this.uloga == "Menadzer") {
+                    } else if (this.uloga == "menadzer") {
                         console.log(this.uloga)
                         this.$router.push("/menadzer");
                     } else {
@@ -79,7 +79,7 @@ export default {
 
         combination: function () {
             this.prijaviSe()
-            this.getRole()
+            this.getUloga()
         }
     }
 };
