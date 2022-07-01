@@ -1,6 +1,5 @@
 package SistemZaNarucivanjeHrane.demo.service;
 
-import SistemZaNarucivanjeHrane.demo.dto.LoginDto;
 import SistemZaNarucivanjeHrane.demo.dto.NoviKorisnikDto;
 import SistemZaNarucivanjeHrane.demo.model.Korisnik;
 import SistemZaNarucivanjeHrane.demo.model.TipPola;
@@ -12,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -38,21 +38,6 @@ public class KorisnikService {
         return korisnikRepository.save(korisnik);
     }
 
-    public ResponseEntity<String> login(LoginDto loginDto, HttpSession session) {
-        if(loginDto.getKorisnickoIme().isEmpty() || loginDto.getLozinka().isEmpty()) {
-            return new ResponseEntity<>("Uneli ste nevalidne podatke", HttpStatus.BAD_REQUEST);
-        }
-
-        Korisnik ulogovaniKorisnik = korisnikRepository.findByKorisnickoIme(loginDto.getKorisnickoIme());
-        if (ulogovaniKorisnik == null)
-            return new ResponseEntity<>("Korisnik ne postoji", HttpStatus.NOT_FOUND);
-        if(!ulogovaniKorisnik.getLozinka().equals(loginDto.getLozinka())){
-            return new ResponseEntity<>("Pogresna lozinka", HttpStatus.BAD_REQUEST);
-        }
-
-        session.setAttribute("Korisnik",ulogovaniKorisnik);
-        return ResponseEntity.ok("Korisnik uspesno ulogovan");
-    }
 
     public ResponseEntity<String> logout(HttpSession session){
         Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute("Korisnik");
@@ -64,15 +49,15 @@ public class KorisnikService {
         return ResponseEntity.ok("Uspesno ste se izlogovali");
     }
 
-    public ResponseEntity<String> registracija(NoviKorisnikDto noviKorisnikDto){
+    public ResponseEntity<String> registracija(NoviKorisnikDto noviKorisnikDto) throws ParseException {
         if(noviKorisnikDto.getKorisnickoIme().isEmpty() || noviKorisnikDto.getIme().isEmpty() || noviKorisnikDto.getDatumRodjenja().isEmpty() || noviKorisnikDto.getLozinka().isEmpty() || noviKorisnikDto.getPrezime().isEmpty() || noviKorisnikDto.getTipPola()==null) {
             return new ResponseEntity<>("Uneli ste nevalidne podatke", HttpStatus.BAD_REQUEST);
         }
-        if(!(noviKorisnikDto.getTipPola().equals("MUSKI")) && !(noviKorisnikDto.getTipPola().equals("ZENSKI"))) {
+        if(!(noviKorisnikDto.getTipPola().equals("Muški")) && !(noviKorisnikDto.getTipPola().equals("Ženski"))) {
             return new ResponseEntity<>("Uneli ste nevalidne podatke za pol", HttpStatus.BAD_REQUEST);
         }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY-mm-dd");
         LocalDate datum = LocalDate.parse(noviKorisnikDto.getDatumRodjenja(), formatter);
         TipPola pol = TipPola.valueOf(noviKorisnikDto.getTipPola());
 
