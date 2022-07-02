@@ -4,6 +4,9 @@ import Home from '../views/Home.vue'
 import Pocetna from '../views/Pocetna.vue'
 import Login from '../views/Login.vue'
 import Registracija from '../views/Registracija.vue'
+import Kupac from '../views/Kupac.vue'
+import Menadzer from '../views/Menadzer.vue'
+
 
 const routes = [
   {
@@ -25,6 +28,16 @@ const routes = [
     path: '/registracija',
     name: 'Registracija',
     component: Registracija
+  },
+  {
+    path: '/kupac',
+    name: 'Kupac',
+    component: Kupac
+  },
+  {
+    path: '/menadzer',
+    name: 'Menadzer',
+    component: Menadzer
   }
 ]
 

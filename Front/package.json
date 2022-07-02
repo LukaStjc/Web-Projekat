@@ -1,5 +1,5 @@
 {
-  "name": "shoppingcartvuex",
+  "name": "demo",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,21 +7,14 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
-    "@babel/core": "^7.18.6",
-    "@babel/preset-env": "^7.18.6",
     "axios": "^0.27.2",
-    "bootstrap": "^5.0.0-beta2",
-    "core-js": "^3.6.5",
-    "uuid": "^8.3.2",
-    "vue": "^3.0.0",
-    "vue-router": "^4.0.0-0",
-    "vuex": "^4.0.0-0"
+    "core-js": "^3.8.3",
+    "vue": "^3.2.13",
+    "vue-router": "^4.0.3"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-router": "~4.5.0",
-    "@vue/cli-plugin-vuex": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
-    "@vue/compiler-sfc": "^3.0.0"
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-router": "~5.0.0",
+    "@vue/cli-service": "~5.0.0"
   }
 }

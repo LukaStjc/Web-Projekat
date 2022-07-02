@@ -2,13 +2,16 @@ package SistemZaNarucivanjeHrane.demo.dto;
 
 public class RestoranIzlazniDto {
 
+    private Long id;
+
     private String naziv;
 
     private String tip;
 
     private String adresa;
 
-    public RestoranIzlazniDto(String naziv, String tip, String adresa) {
+    public RestoranIzlazniDto(Long id, String naziv, String tip, String adresa) {
+        this.id = id;
         this.naziv = naziv;
         this.tip = tip;
         this.adresa = adresa;
@@ -36,6 +39,14 @@ public class RestoranIzlazniDto {
 
     public String getAdresa() {
         return adresa;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override

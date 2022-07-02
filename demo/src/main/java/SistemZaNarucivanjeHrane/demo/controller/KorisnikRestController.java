@@ -28,7 +28,7 @@ public class KorisnikRestController {
     }
 
     @PostMapping("korisnik/login")
-    public ResponseEntity<KorisnikZaLoginDto> login(@RequestBody LoginDto loginDto, HttpSession session) {
+    public ResponseEntity<String> login(@RequestBody LoginDto loginDto, HttpSession session) {
         if(loginDto.getKorisnickoIme().isEmpty() || loginDto.getLozinka().isEmpty()) {
             return new ResponseEntity("Uneli ste nevalidne podatke", HttpStatus.BAD_REQUEST);
         }
@@ -52,7 +52,7 @@ public class KorisnikRestController {
         else
             uloga = "dostavljac";
         KorisnikZaLoginDto korisnikZaLoginDto = new KorisnikZaLoginDto(ulogovaniKorisnik.getKorisnickoIme(), ulogovaniKorisnik.getLozinka(), uloga);
-        return ResponseEntity.ok(korisnikZaLoginDto);
+        return ResponseEntity.ok(uloga);
     }
 
     @PostMapping("korisnik/logout")

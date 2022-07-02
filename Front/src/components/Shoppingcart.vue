@@ -8,16 +8,10 @@
             <h6 class="card-title">
               {{ product.name }} - $ {{ product.price }}
             </h6>
-            <button
-              :disabled="product.cart"
-              @click="addProduct(product)"
-              href="#"
-              class="btn  btn-block"
-              :class="{
-                'btn-primary': !product.cart,
-                'btn-success': product.cart,
-              }"
-            >
+            <button :disabled="product.cart" @click="addProduct(product)" href="#" class="btn  btn-block" :class="{
+              'btn-primary': !product.cart,
+              'btn-success': product.cart,
+            }">
               {{ !product.cart ? "Add" : "Added" }}
             </button>
           </div>
@@ -47,18 +41,11 @@
               {{ product.price }}
             </td>
             <td>
-              <button
-                @click="decreaseQ(product.id)"
-                class="btn btn-primary btn-sm"
-              >
+              <button @click="decreaseQ(product.id)" class="btn btn-primary btn-sm">
                 -
               </button>
               {{ product.quantity }}
-              <button
-                @click="increaseQ(product.id)"
-                class="btn btn-primary btn-sm"
-                size="sm"
-              >
+              <button @click="increaseQ(product.id)" class="btn btn-primary btn-sm" size="sm">
                 +
               </button>
             </td>
@@ -115,4 +102,5 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped></style>
+<style scoped>
+</style>

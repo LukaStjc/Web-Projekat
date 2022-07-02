@@ -1,5 +1,5 @@
 <template>
-    <div class="background">
+    <div style="background-color:lightblue backgrou" class="background">
         <NavBar />
         <h1>
             <div class="fw-bold text text-center">
@@ -31,7 +31,8 @@ export default {
     background-image: url("https://a.storyblok.com/f/67418/1920x1280/166659692b/ella-olsson-opbjwbccaeo-unsplash.jpg");
     background-size: cover;
     background-position: center;
-
+    width: 100%;
+    height: 100vh;
 }
 
 .text {

@@ -220,7 +220,7 @@ public class RestoranService {
         List<Restoran> restorani = findAll();
         List<RestoranIzlazniDto> izlazniRestorani = new ArrayList<>();
         for (Restoran restoran : restorani) {
-            izlazniRestorani.add(new RestoranIzlazniDto(restoran.getNaziv(), restoran.getTip(), restoran.getLokacija().getAdresa()));
+            izlazniRestorani.add(new RestoranIzlazniDto(restoran.getID(), restoran.getNaziv(), restoran.getTip(), restoran.getLokacija().getAdresa()));
         }
 
         return ResponseEntity.ok(izlazniRestorani);
