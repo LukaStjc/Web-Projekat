@@ -55,6 +55,15 @@ export default {
         Restorani
     },
 
+    /*async created() {
+        const response = await axios.get('login', {
+            headers: {
+                Authorization: 'Bearer' + localStorage.getItem('token')
+            }
+        });
+        console.log(response.data)
+    },*/
+
     data: function () {
         return {
             restorani: [],
@@ -70,7 +79,8 @@ export default {
             .catch(error => {
                 console.log(error);
             });
-    }
+    },
+   
 };
 
 </script>

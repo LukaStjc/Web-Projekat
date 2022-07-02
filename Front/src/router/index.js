@@ -6,6 +6,7 @@ import Login from '../views/Login.vue'
 import Registracija from '../views/Registracija.vue'
 import Kupac from '../views/Kupac.vue'
 import Menadzer from '../views/Menadzer.vue'
+import PrikazSvogNaloga from '../views/PrikazSvogNaloga.vue'
 
 
 const routes = [
@@ -38,6 +39,12 @@ const routes = [
     path: '/menadzer',
     name: 'Menadzer',
     component: Menadzer
+  },
+  {
+    path: '/korisnik/:id',
+    name: 'PrikazSvogNaloga',
+    component: PrikazSvogNaloga
+
   }
 ]
 
