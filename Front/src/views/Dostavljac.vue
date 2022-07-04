@@ -16,64 +16,62 @@
 
             <ol class="breadcrumb justify-content-md-end">
                 <li class="breadcrumb-item "><button v-on:click="prikazNaloga()">Moj nalog</button></li>
-                <li class="breadcrumb-item "><a href="#">Korpa</a></li>
                 <li class="breadcrumb-item "><button v-on:click="odjaviSe()">Odjavi se</button></li>
 
             </ol>
 
         </nav>
 
+
         <div class="row mt-2 justify-content-center">
-            <div class="col-2" v-for="restoran in restorani" :key="restoran.id">
+            <div class="col-2" v-for="porudzbina in porudzbine" :key="porudzbina.id">
                 <div class="card" style="width: 10rem;">
                     <div class="card-body">
 
-                        <h5 class="card-title"> {{ restoran.naziv }} </h5>
-                        <h6 class="card-subtitle mb-2 text-muted"> {{ restoran.tip }} </h6>
-                        <h6 class="card-subtitle mb-2 text-muted"> {{ restoran.adresa }} </h6>
-
+                        <h5 class="card-title"> {{ porudzbina.id }} </h5>
+                        <!-- TODO ispis naziva restorana -->
+                        <h6 class="card-subtitle mb-2 text-muted"> Naziv restorana: {{ porudzbina.restoran }} </h6>
+                        <artikal-comp v-for="artikal in porudzbina.poruceniArtikli" :key="artikal.id" :artikal="artikal">
+                    </artikal-comp>
                         <button class="btn btn-primary">Vidi restoran</button>
+
 
                     </div>
                 </div>
             </div>
         </div>
 
+
+
+
     </div>
 
 </template>
 
+
+
 <script>
-
 import axios from "axios";
-import Restorani from "../components/Restorani.vue";
-
+import RestoranComp from "../components/RestoranComp.vue";
+import ArtikalComp from "../components/ArtikalComp.vue";
 
 export default {
-    name: "Kupac",
-    components: {
-        Restorani
-    },
-
-    /*async created() {
-        const response = await axios.get('login', {
-            headers: {
-                Authorization: 'Bearer' + localStorage.getItem('token')
-            }
-        });
-        console.log(response.data)
-    },*/
-
+    name: 'Dostavljac',
     data: function () {
         return {
-            restorani: [],
+            porudzbine: [],
         };
     },
+
+    components: {
+        RestoranComp, ArtikalComp
+    },
+
     mounted: function () {
         axios
-            .get("http://localhost:8081/api/restorani", { withCredentials: true })
+            .get("http://localhost:8081/api/dostavljac/porudzbine", { withCredentials: true })
             .then(res => {
-                this.restorani = res.data;
+                this.porudzbine = res.data;
                 console.log(this.restorani);
             })
             .catch(error => {
@@ -82,7 +80,7 @@ export default {
     },
 
     methods: {
-         prikazNaloga: function () {
+        prikazNaloga: function () {
             axios
                 .get("http://localhost:8081/api/ulogovani_korisnik", {
                     withCredentials: true
@@ -98,8 +96,8 @@ export default {
                     alert("Neuspesno");
                 });
         },
-        
-         odjaviSe: function() {
+
+        odjaviSe: function () {
             fetch("http://localhost:8081/api/korisnik/logout", {
                 method: "POST",
                 credentials: 'include',
@@ -111,7 +109,7 @@ export default {
 
                 .then((data) => {
 
-                        this.$router.push("/login");
+                    this.$router.push("/login");
                 })
 
                 .catch((err) => {
@@ -120,44 +118,11 @@ export default {
                 });
         }
     }
-   
-};
 
+}
 </script>
 
+
+
 <style>
-.navbar {
-    width: auto;
-    height: auto;
-    background-color: #8cb1dc;
-}
-
-.image {
-    width: 100px;
-    height: 70px;
-    margin: auto;
-    padding-left: 10%;
-}
-
-.background {
-    background: lightblue backgrou;
-    background-size: cover;
-    background-position: center;
-    width: 100%;
-    height: 100vh;
-}
-
-.buttonStyle {
-    padding-right: 1%;
-}
-
-#restorani {
-    padding: 3%;
-
-}
-
-.card {
-    margin: auto 5px;
-    padding-top: 5%;
-}
 </style>

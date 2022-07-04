@@ -7,6 +7,12 @@ import Registracija from '../views/Registracija.vue'
 import Kupac from '../views/Kupac.vue'
 import Menadzer from '../views/Menadzer.vue'
 import PrikazSvogNaloga from '../views/PrikazSvogNaloga.vue'
+import IzmenaSvogNaloga from '../views/IzmenaSvogNaloga.vue'
+import Dostavljac from '../views/Dostavljac.vue'
+import Admin from '../views/Admin.vue'
+import Restoran from '../views/Restoran.vue'
+import PregledSvhKorisnika from '../views/PregledSvihKorisnika.vue'
+
 
 
 const routes = [
@@ -41,11 +47,42 @@ const routes = [
     component: Menadzer
   },
   {
-    path: '/korisnik/:id',
+    path: '/moj_nalog',
     name: 'PrikazSvogNaloga',
     component: PrikazSvogNaloga
 
-  }
+  },
+  {
+    path: '/izmeni_nalog',
+    name: 'IzmenaSvogNaloga',
+    component: IzmenaSvogNaloga
+
+  },
+  {
+    path: '/dostavljac',
+    name: 'Dostavljac',
+    component: Dostavljac
+
+  },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: Admin
+
+  },
+  {
+    path: '/restoran/:id',
+    name: 'Restoran',
+    component: () => import(/* webpackChunkName: "artikliRestorana" */ '../views/Restoran.vue')
+
+  },
+  {
+    path: '/svi_korisnici',
+    name: 'PregledSvihKorisnika',
+    component: PregledSvhKorisnika
+
+  },
+
 ]
 
 const router = createRouter({

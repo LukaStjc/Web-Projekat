@@ -1,7 +1,7 @@
 <template>
     <div style="background-color:lightblue backgrou" class="background">
         <nav class="navbar" style="background-color: #8cb1dc;">
-            <a>
+            <a v-on:click="vratiSe()">
                 <img src="https://cdn.freebiesupply.com/logos/large/2x/sirius-1-logo-svg-vector.svg" class="image"
                     alt="">
             </a>
@@ -16,12 +16,18 @@
 
             <ol class="breadcrumb justify-content-md-end">
                 <li class="breadcrumb-item "><button v-on:click="prikazNaloga()">Moj nalog</button></li>
-                <li class="breadcrumb-item "><a href="#">Korpa</a></li>
                 <li class="breadcrumb-item "><button v-on:click="odjaviSe()">Odjavi se</button></li>
 
             </ol>
 
         </nav>
+
+        <div class="btn-group-vertical justify-content-md-end">
+            <router-link class="btn btn-primary" :to="{name: 'PregledSvihKorisnika'}">Pregled svih korisnika</router-link>
+            <a href="#" class="btn btn-primary">Kreiraj korisnika</a>
+            <a href="#" class="btn btn-primary">Kreiraj restoran</a>
+
+        </div>
 
         <div class="row mt-2 justify-content-center">
             <div class="col-2" v-for="restoran in restorani" :key="restoran.id">
@@ -32,7 +38,10 @@
                         <h6 class="card-subtitle mb-2 text-muted"> {{ restoran.tip }} </h6>
                         <h6 class="card-subtitle mb-2 text-muted"> {{ restoran.adresa }} </h6>
 
-                        <button class="btn btn-primary">Vidi restoran</button>
+                        <router-link :to="{ name: 'Restoran', params: { id: restoran.id } }"><button
+                                class="btn btn-primary" style="margin: 2%">Vidi restoran</button></router-link>
+                        <button class="btn btn-primary" style="margin: 2%">Obriši restoran</button>
+
 
                     </div>
                 </div>
@@ -50,23 +59,15 @@ import Restorani from "../components/Restorani.vue";
 
 
 export default {
-    name: "Kupac",
+    name: "Admin",
     components: {
         Restorani
     },
 
-    /*async created() {
-        const response = await axios.get('login', {
-            headers: {
-                Authorization: 'Bearer' + localStorage.getItem('token')
-            }
-        });
-        console.log(response.data)
-    },*/
-
     data: function () {
         return {
             restorani: [],
+            korisnik: {}
         };
     },
     mounted: function () {
@@ -82,7 +83,7 @@ export default {
     },
 
     methods: {
-         prikazNaloga: function () {
+        prikazNaloga: function () {
             axios
                 .get("http://localhost:8081/api/ulogovani_korisnik", {
                     withCredentials: true
@@ -98,8 +99,8 @@ export default {
                     alert("Neuspesno");
                 });
         },
-        
-         odjaviSe: function() {
+
+        odjaviSe: function () {
             fetch("http://localhost:8081/api/korisnik/logout", {
                 method: "POST",
                 credentials: 'include',
@@ -111,16 +112,42 @@ export default {
 
                 .then((data) => {
 
-                        this.$router.push("/login");
+                    this.$router.push("/login");
                 })
 
                 .catch((err) => {
                     console.log("Error : " + err);
                     alert(err);
                 });
+        },
+
+        vratiSe: function () {
+            axios
+                .get("http://localhost:8081/api/ulogovani_korisnik", {
+                    withCredentials: true
+                })
+
+                .then(res => {
+                    this.korisnik = res.data
+                    console.log(this.korisnik.tipUloge)
+                    if (this.korisnik.tipUloge == 'ADMIN') {
+                        this.$router.push("/admin");
+                    } else if (this.korisnik.tipUloge == 'DOSTAVLJAC') {
+                        this.$router.push("/dostavljac");
+                    } else if (this.korisnik.tipUloge == 'MENADZER') {
+                        this.$router.push("/menadzer");
+                    } else {
+                        this.$router.push("/kupac");
+                    }
+                })
+
+                .catch(error => {
+                    console.log(error.response);
+                    alert("Neuspesno");
+                });
         }
     }
-   
+
 };
 
 </script>

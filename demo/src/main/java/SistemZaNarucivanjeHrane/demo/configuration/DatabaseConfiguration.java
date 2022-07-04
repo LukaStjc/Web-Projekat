@@ -98,6 +98,7 @@ public class DatabaseConfiguration {
         porucenArtikals.add(porucenArtikal1);
         Porudzbina porudzbina = new Porudzbina(porucenArtikals, restoranSrpskaSicilija, 360, null, Status.CEKA_DOSTAVLJACA);
         porudzbinaRepository.save(porudzbina);
+        dostavljacSale.dodajPorudzbinu(porudzbina);
         Set<PorucenArtikal> porucenArtikals2 = new HashSet<>();
         porucenArtikals2.add(porucenArtikal2);
         Porudzbina porudzbina2 = new Porudzbina(porucenArtikals2, restoranSrpskaSicilija, 150, null, Status.U_KORPI);
@@ -134,7 +135,7 @@ public class DatabaseConfiguration {
         //porudzbinaRepository.save(porudzbina1);
 
 
-        Admin admin = new Admin("anicadjukic", "jasamasistent", "Anica", "Djokic", TipPola.ZENSKI, LocalDate.of(1999, 05, 11));
+        Admin admin = new Admin("anicadjukic", "jasamasistent", "Anica", "Djukic", TipPola.ZENSKI, LocalDate.of(1999, 05, 11));
         adminRepository.save(admin);
         return true;
     }

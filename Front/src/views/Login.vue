@@ -2,12 +2,12 @@
     <div style="background-color:lightblue backgrou" class="background">
         <NavBarNoButtons />
 
-        <div class="mb-3">
+        <div class="mb-3 textBox justify-content-center">
             <label for="inputEmail14" class="form-label">Korisničko ime</label>
             <input v-model="korisnik.korisnickoIme" class="form-control" />
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3 textBox">
             <label for="inputPassword4" class="form-label">Lozinka</label>
             <input v-model="korisnik.lozinka" type="password" class="form-control" />
         </div>
@@ -77,24 +77,24 @@ export default {
                 body: JSON.stringify(this.korisnik)
             })
 
-            .then((response) => response.json())
-            .then((data) => {
-        
-                if (data.uloga == 'admin') {
-                 this.$router.push("/admin");
-             } else if (data.uloga == 'dostavljac') {
-                 this.$router.push("/dostavljac");
-             } else if (data.uloga == 'menadzer') {
-                 this.$router.push("/menadzer");
-             } else {
-                 this.$router.push("/kupac");
-             }
-            })
+                .then((response) => response.json())
+                .then((data) => {
 
-             .catch((err) => {
-              console.log("Error : " + err);
-              alert(err);
-            });
+                    if (data.uloga == 'admin') {
+                        this.$router.push("/admin");
+                    } else if (data.uloga == 'dostavljac') {
+                        this.$router.push("/dostavljac");
+                    } else if (data.uloga == 'menadzer') {
+                        this.$router.push("/menadzer");
+                    } else {
+                        this.$router.push("/kupac");
+                    }
+                })
+
+                .catch((err) => {
+                    console.log("Error : " + err);
+                    alert(err);
+                });
 
         }
 
@@ -116,5 +116,10 @@ export default {
     background-position: center;
     width: 100%;
     height: 100vh;
+}
+
+.textBox {
+    width: 30%;
+    align-content: center;
 }
 </style>

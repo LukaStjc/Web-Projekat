@@ -45,8 +45,8 @@ public class RestoranRestController {
 
     }
 
-    @DeleteMapping("moj_restoran/ukloni_artikal/{id}")
-    public ResponseEntity<String> removeArtikal(@PathVariable(name = "id") Long id, HttpSession session) {
+    @DeleteMapping("moj_restoran/ukloni_artikal")
+    public ResponseEntity<String> removeArtikal(@RequestBody Long id, HttpSession session) {
         return restoranService.removeArtikal(id, session);
     }
 
@@ -86,6 +86,14 @@ public class RestoranRestController {
     @DeleteMapping("obrisi_restoran/{id}") //id restorana koji se brise
     public ResponseEntity<String> deleteRestoran(@PathVariable Long id, HttpSession session) {
         return restoranService.obrisiRestoran(session, id);
+    }
+
+    @GetMapping("ulogovani_korisnik")
+    public ResponseEntity<Korisnik> ulogovaniKorisnikId(HttpSession session) {
+        Korisnik korisnik = (Korisnik) session.getAttribute("Korisnik");
+        if(korisnik == null)
+            return new ResponseEntity("Nijedan korisnik nije ulogovan", HttpStatus.NOT_FOUND);
+        return ResponseEntity.ok(korisnik);
     }
 
 
